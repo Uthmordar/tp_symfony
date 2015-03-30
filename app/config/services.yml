@@ -1,0 +1,20 @@
+# Learn more about services, parameters and containers at
+# http://symfony.com/doc/current/book/service_container.html
+parameters:
+#    parameter_name: value
+    database_name: symfony_torrent
+    torrent_paginator_per_page: 3
+
+services:
+#    service_name:
+#        class: AppBundle\Directory\ClassName
+#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+    parser_torrent_service:
+        class: AppBundle\Services\ParserTorrentServices
+        arguments: []
+    register_from_parser:
+        class: AppBundle\Services\RegisterFromParserServices
+        arguments: ["@doctrine", "@validator"]
+    pagination_service:
+        class: AppBundle\Services\PaginationServices
+        arguments: ["%torrent_paginator_per_page%"]
