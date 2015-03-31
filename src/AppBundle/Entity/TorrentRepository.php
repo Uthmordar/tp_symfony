@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * TorrentRepository
@@ -11,6 +12,8 @@ use Doctrine\ORM\EntityRepository;
  * repository methods below.
  */
 class TorrentRepository extends EntityRepository{
+    protected $nbTorrentHomeByPage=5;
+    
     public function findTorrentByName($name){
         $qb=$this->createQueryBuilder("t");
         
@@ -21,14 +24,20 @@ class TorrentRepository extends EntityRepository{
         return $query->getResult();
     }
     
-    public function findNoBlockNoSeenTorrent(){
+    public function findNoBlockNoSeenTorrent($p){
         $query = $this->getEntityManager()
         ->createQuery('
             SELECT t, m FROM AppBundle:Torrent t
             JOIN t.movie m
             WHERE m.block=0 AND m.seen=0'
-        );
+        )->setMaxResults($this->nbTorrentHomeByPage)
+        ->setFirstResult($this->nbTorrentHomeByPage * ($p-1));
         
-        return $query->getResult();
+        $paginator=new Paginator($query);
+        return $paginator;
+    }
+    
+    public function getNbTorrentHomeByPage(){
+        return $this->nbTorrentHomeByPage;
     }
 }

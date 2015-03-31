@@ -3,15 +3,16 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Movie
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="AppBundle\Entity\MovieRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
-class Movie
-{
+class Movie{
     /**
      * @var integer
      *
@@ -23,49 +24,57 @@ class Movie
 
     /**
      * @var string
-     *
+     * @Assert\NotBlank()
+     * @Assert\Length(
+     *    min = 2,
+     *    max = 200,
+     * )
      * @ORM\Column(name="title", type="string", length=255)
      */
     private $title;
 
     /**
      * @var integer
-     *
+     * @Assert\NotBlank()
+     * @Assert\Length(
+     *    min = 2,
+     *    max = 200,
+     * )
      * @ORM\Column(name="imdb_id", type="integer")
      */
     private $imdbId;
 
     /**
      * @var string
-     *
+     * @Assert\NotBlank()
      * @ORM\Column(name="year", type="string", length=255)
      */
     private $year;
 
     /**
      * @var string
-     *
+     * @Assert\NotBlank()
      * @ORM\Column(name="director", type="string", length=255)
      */
     private $director;
 
     /**
      * @var string
-     *
+     * 
      * @ORM\Column(name="image", type="string", length=255, nullable=true)
      */
     private $image;
 
     /**
      * @var float
-     *
+     * @Assert\NotBlank()
      * @ORM\Column(name="rating", type="float")
      */
     private $rating;
 
     /**
      * @var integer
-     *
+     * @Assert\NotBlank()
      * @ORM\Column(name="rating_count", type="integer")
      */
     private $ratingCount;
@@ -75,20 +84,31 @@ class Movie
      *
      * @ORM\Column(name="seen", type="boolean")
      */
-    private $seen;
+    private $seen=false;
 
     /**
      * @var boolean
      *
      * @ORM\Column(name="block", type="boolean")
      */
-    private $block;
+    private $block=false;
     
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Torrent", mappedBy="movie")
+     * @var \DateTime
+     *
+     * @ORM\Column(name="dateCreated", type="datetime")
+     */
+    private $dateCreated;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Torrent", mappedBy="movie", cascade={"persist", "remove"})
      */
     private $torrents;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Category", mappedBy="movies", cascade={"persist"})
+     */
+    private $categories;
 
     /**
      * Get id
@@ -306,6 +326,29 @@ class Movie
     {
         return $this->block;
     }
+    
+    /**
+     * Set dateCreated
+     *
+     * @param \DateTime $dateCreated
+     * @return Torrent
+     */
+    public function setDateCreated($dateCreated)
+    {
+        $this->dateCreated = $dateCreated;
+
+        return $this;
+    }
+
+    /**
+     * Get dateCreated
+     *
+     * @return \DateTime 
+     */
+    public function getDateCreated()
+    {
+        return $this->dateCreated;
+    }
     /**
      * Constructor
      */
@@ -342,5 +385,13 @@ class Movie
      */
     public function getTorrents(){
         return $this->torrents;
+    }
+    
+    /**
+     * @ORM\PrePersist
+     */
+    public function prePersistCb(){
+        $date=new \DateTime();
+        $this->setDateCreated($date);
     }
 }

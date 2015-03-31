@@ -42,7 +42,8 @@ class ParserTorrentServices{
         $crawler->filter('div.torrentname>div.filmType>a.cellMainLink')->each(function($node) use(&$data, $crawler){
             $ancre=$node->text();
             $link=$crawler->selectLink($node->text());
-            $data[]=['ancre'=>$ancre, 'uri'=>$link->link()->getUri()];
+            $qT=$this->setQualityType($ancre);
+            $data[]=['ancre'=>$ancre, 'uri'=>$link->link()->getUri(), 'qualityType'=>$qT, 'genre'=>[]];
         });
         return $data;
     }
@@ -103,5 +104,24 @@ class ParserTorrentServices{
         $crawler->filter('span[itemprop="ratingCount"]')->each(function($node) use(&$data, $k){
             $data[$k]['votes']=$node->text();
         });
+        $crawler->filter('span[itemprop="genre"]')->each(function($node) use(&$data, $k){
+            $data[$k]['genre'][]=$node->text();
+        });
+    }
+    
+    public function setQualityType($name){
+        if(preg_match('/( brrip | bluray )/i', $name)){
+            return 'BluRay';
+        }else if(preg_match('/(hdrip)/i', $name)){
+            return 'HD';
+        }else if(preg_match('/( cam )/i', $name)){
+            return 'cam';
+        }else if(preg_match('/( ts )/i', $name)){
+            return 'ts';
+        }else if(preg_match('/( xvid )/i', $name)){
+            return 'XviD';
+        }else{
+            return 'Unknow';
+        }
     }
 }

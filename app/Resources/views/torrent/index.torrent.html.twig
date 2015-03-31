@@ -6,27 +6,24 @@
 {% endblock %}
 
 {% block main_content %}
-    <h2>Back</h2>
-    <div style="margin-bottom: 2rem;">
-        <a href="{{path('createActu')}}" title="about" class="btn btn-primary">add actu</a>
-    </div>
-    <form method="POST">
+    <h2>Homepage</h2>
+    <!--<form method="POST">
         <label for="title">title</label>
-        <input type="text" name="title" id="title" value="{{filter}}"/>
+        <input type="text" name="title" id="title" value=""/>
         <input type="submit" value="filter" class="btn btn-primary"/>
-    </form>
+    </form>-->
     <nav>
         <ul class="pagination">
           <li {{(hasPrevPage)? "class='disabled'" : ""}}>
-            <a href="{{path('indexActu', {"p":p-1})}}" aria-label="Previous">
+            <a href="{{path('indexTorrent', {"p":p-1})}}" aria-label="Previous">
               <span aria-hidden="true">&laquo;</span>
             </a>
           </li>
           {% for i in range(start, stop) %}
-          <li {{(p==i)? "class='active'" : ""}}><a href="{{path('indexActu', {"p":i})}}">{{i}}</a></li>
+          <li {{(p==i)? "class='active'" : ""}}><a href="{{path('indexTorrent', {"p":i})}}">{{i}}</a></li>
           {% endfor %}
           <li {{(hasNextPage)? "class='disabled'" : ""}}>
-            <a href="{{path('indexActu', {"p":p+1})}}" aria-label="Next">
+            <a href="{{path('indexTorrent', {"p":p+1})}}" aria-label="Next">
               <span aria-hidden="true">&raquo;</span>
             </a>
           </li>
@@ -37,18 +34,18 @@
         <thead>
                 <tr>
                     <th>#</th>
-                    <th>Actu name</th>
-                    <th>Status</th>
+                    <th>Torrent name</th>
+                    <th>Movie</th>
                     <th>Actions</th>
                 </tr>
             </thead>
-    {% for actu in actus %}
+    {% for torrent in torrents %}
         <tr>
             <td>{{((p-1)*nbPage)+loop.index}}</td>
-            <td><h4><a href="{{path("showActu", {"id":actu.id})}}">{{actu.title}}</a></h4></td>
-            <td><span class="glyphicon glyphicon-eye-{{actu.isPublished? "open text-success" : "close"}}" aria-hidden="true"></span></td>
-            <td><a href="{{path("editActu", {"id":actu.id})}}">modifier</a>
-            <a href="{{path("deleteActu", {"id":actu.id})}}" class="delete btn btn-danger"><span class="glyphicon glyphicon-warning-sign"></span>Delete</a></td>
+            <td><h4><a href="">{{torrent.name}}</a></h4></td>
+            <td>{{torrent.movie.title}}</td>
+            <td><a href="">modifier</a>
+            <a href="" class="delete btn btn-danger"><span class="glyphicon glyphicon-warning-sign"></span>Delete</a></td>
         </tr>
     {% endfor %}
     </table>

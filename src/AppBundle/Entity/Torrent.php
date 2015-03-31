@@ -72,6 +72,13 @@ class Torrent
      * @ORM\Column(name="quality", type="string", length=255)
      */
     private $quality;
+    
+    /**
+     * @var string
+     * @Assert\NotBlank()
+     * @ORM\Column(name="quality_type", type="string", length=255)
+     */
+    private $qualityType;
 
     /**
      * @var boolean
@@ -241,6 +248,29 @@ class Torrent
     public function getQuality()
     {
         return $this->quality;
+    }
+    
+    /**
+     * Set quality
+     *
+     * @param string $qualityType
+     * @return Torrent
+     */
+    public function setQualityType($qualityType)
+    {
+        $this->qualityType = $qualityType;
+
+        return $this;
+    }
+
+    /**
+     * Get quality
+     *
+     * @return string 
+     */
+    public function getQualityType()
+    {
+        return $this->qualityType;
     }
 
     /**

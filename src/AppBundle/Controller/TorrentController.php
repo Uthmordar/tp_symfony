@@ -11,25 +11,22 @@ class TorrentController extends Controller{
     /**
      * @Route("/{p}", defaults={"p"=1}, name="indexTorrent")
      */
-    public function indexAction(){
+    public function indexAction($p){
         $pagination=$this->get('pagination_service');
         
         $torrentRepo=$this->getDoctrine()->getRepository("AppBundle:Torrent");
 
-        $torrents=$torrentRepo->findNoBlockNoSeenTorrent();
-
-        var_dump($torrents);
+        $torrents=$torrentRepo->findNoBlockNoSeenTorrent($p);
         
-        //$data=$pagination->getPaginationData($p, count($actus), $actuRepo->getNbActusPerPage());
+        $data=$pagination->getPaginationData($p, count($torrents), $torrentRepo->getNbTorrentHomeByPage());
         
         
-        /*$param=[
-            'actus'=>$actus,
-            'filter'=>$title,
+        $param=[
+            'torrents'=>$torrents,
         ];
         
-        $params=array_merge($param, $data);*/
+        $params=array_merge($param, $data);
         
-        return $this->render('actu/index_actu.html.twig');
+        return $this->render('torrent/index.torrent.html.twig', $params);
     }
 }

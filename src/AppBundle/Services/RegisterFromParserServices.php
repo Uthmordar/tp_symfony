@@ -3,6 +3,7 @@ namespace AppBundle\Services;
 
 use AppBundle\Entity\Movie;
 use AppBundle\Entity\Torrent;
+use AppBundle\Entity\Category;
 
 class RegisterFromParserServices{
         
@@ -12,6 +13,7 @@ class RegisterFromParserServices{
     protected $manager;
     protected $movieRepo;
     protected $torrentRepo;
+    protected $categoryRepo;
     
     public function __construct($doctrine, $validator){
         $this->validator=$validator;
@@ -22,6 +24,7 @@ class RegisterFromParserServices{
         
         $this->movieRepo=$this->doctrine->getRepository('AppBundle:Movie');
         $this->torrentRepo=$this->doctrine->getRepository('AppBundle:Torrent');
+        $this->categoryRepo=$this->doctrine->getRepository('AppBundle:Category');
     }
     
     /**
@@ -33,7 +36,7 @@ class RegisterFromParserServices{
         foreach($data as $d){
             if(!empty($d['imdbId']) && !empty($d['director']) && !empty($d['rating']) && !empty($d['votes']) 
                 && !empty($d['title']) && !empty($d['year']) && !empty($d['hash']) && !empty($d['leechers'])
-                    && !empty($d['magnet']) && !empty($d['ancre']) && !empty($d['quality']) && !empty($d['seeders']) && $d['rating']>7){
+                    && !empty($d['magnet']) && !empty($d['ancre']) && !empty($d['quality']) && !empty($d['seeders']) && !in_array($d['qualityType'], ['cam', 'ts'])){
                 $this->registerData($d);
             }
         }
@@ -45,7 +48,8 @@ class RegisterFromParserServices{
      * @param type $d
      */
     public function registerData($d){
-        $movie=$this->registerMovie($d);
+        $categories=$this->registerCategories($d['genre']);
+        $movie=$this->registerMovie($d, $categories);
         if($movie){
             $this->registerTorrent($movie, $d);
         }
@@ -53,12 +57,31 @@ class RegisterFromParserServices{
         $this->manager->flush();
     }
     
+    public function registerCategories($cats){
+        $categories=[];
+        foreach($cats as $cat){
+            $result=$this->categoryRepo->findCategoryByName($cat);
+            if(!empty($result)){
+                $categories[]=$result[0];
+            }else{
+                $categorie=new Category();
+                $categorie->setName($cat);
+                if(count($this->validator->validate($categorie))<1){
+                    $this->manager->persist($categorie);
+                    $categories[]=$categorie;
+                }
+            }
+        }
+        
+        return $categories;
+    }
+    
     /**
      * register/update movie by imdbid
      * @param type $d
      * @return type
      */
-    public function registerMovie($d){
+    public function registerMovie($d, $categories){
         $result=$this->movieRepo->findMovieByImdb($d['imdbId']);
                 
         if(!empty($result)){
@@ -76,8 +99,11 @@ class RegisterFromParserServices{
             $movie->setImdbId($d['imdbId']);
             $movie->setRating($d['rating']);
             $movie->setRatingCount($d['votes']);
-            $movie->setTitle($d['title']);
-            $movie->setYear($d['year']);      
+            $movie->setTitle(trim(str_replace('"', "'", $d['title'])));
+            $movie->setYear($d['year']);
+            foreach($categories as $cat){
+                $movie->addCategory($cat);
+            }
         }
         
         return $this->validateEntity($movie);
@@ -105,6 +131,7 @@ class RegisterFromParserServices{
             $torrent->setName($d['ancre']);
             $torrent->setQuality($d['quality']);
             $torrent->setSeeders($d['seeders']);
+            $torrent->setQualityType($d['qualityType']);
             $torrent->setMovie($movie);
         }
         

@@ -60,7 +60,7 @@ class Movie{
 
     /**
      * @var string
-     * 
+     * @Assert\Url()
      * @ORM\Column(name="image", type="string", length=255, nullable=true)
      */
     private $image;
@@ -68,6 +68,9 @@ class Movie{
     /**
      * @var float
      * @Assert\NotBlank()
+     * @Assert\Range(
+     *      min = 6.0
+     * )
      * @ORM\Column(name="rating", type="float")
      */
     private $rating;
@@ -105,6 +108,10 @@ class Movie{
      */
     private $torrents;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Category", mappedBy="movies", cascade={"persist"})
+     */
+    private $categories;
 
     /**
      * Get id
@@ -389,5 +396,39 @@ class Movie{
     public function prePersistCb(){
         $date=new \DateTime();
         $this->setDateCreated($date);
+    }
+
+    /**
+     * Add categories
+     *
+     * @param \AppBundle\Entity\Category $categories
+     * @return Movie
+     */
+    public function addCategory(\AppBundle\Entity\Category $categories)
+    {
+        $this->categories[] = $categories;
+        $categories->addMovie($this);
+        
+        return $this;
+    }
+
+    /**
+     * Remove categories
+     *
+     * @param \AppBundle\Entity\Category $categories
+     */
+    public function removeCategory(\AppBundle\Entity\Category $categories)
+    {
+        $this->categories->removeElement($categories);
+    }
+
+    /**
+     * Get categories
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getCategories()
+    {
+        return $this->categories;
     }
 }

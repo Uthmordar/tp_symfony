@@ -3,7 +3,7 @@
 parameters:
 #    parameter_name: value
     database_name: symfony_torrent
-    torrent_paginator_per_page: 3
+    torrent_paginator_per_page: 5
 
 services:
 #    service_name:
