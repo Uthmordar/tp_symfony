@@ -8,6 +8,19 @@ class ParserTorrentServices{
     protected $data=[];
     protected $client;
     protected $baseUrl='http://kickass.to/movies/?field=seeders&sorder=desc';
+    protected $crawler;
+    
+    /**
+     * data provider selector for torrent page
+     * @var type 
+     */
+    protected $torrentPageProvider=[
+        ['div.dataList>ul>li span', 'title', ['eq'=>0]],
+        ['div.seedBlock>strong', 'seeders', []],
+        ['div.leechBlock>strong', 'leechers', []],
+        ['div.dataList>ul>li span', 'quality', ['eq'=>1]],
+        ['div.dataList>ul>li a', 'imdbId', ['eq'=>1]]
+    ];
     
     public function __construct(){
         $this->client=new Client();
@@ -55,29 +68,39 @@ class ParserTorrentServices{
      * @param type $torrent
      */
     public function getTorrentPageData(&$data, $k, $torrent){
-        $crawler=$this->client->request('GET', $torrent['uri']);
+        $this->crawler=$this->client->request('GET', $torrent['uri']);
 
-        $crawler->filter('div.dataList>ul>li span')->eq(0)->each(function($node) use(&$data, $k){
-            $data[$k]['title']=$node->text();
-        });
-        $crawler->filter('a.magnetlinkButton')->each(function($node) use(&$data, $k){
+        $this->crawler->filter('a.magnetlinkButton')->each(function($node) use(&$data, $k){
             $magnet=$node->attr('href');
             preg_match('/btih:(?<hash>\w*)&/', $magnet, $matches);
             $data[$k]['magnet']=$magnet;
             $data[$k]['hash']=$matches['hash'];
         });
-        $crawler->filter('div.seedBlock>strong')->each(function($node) use(&$data, $k){
-            $data[$k]['seeders']=$node->text();
-        });
-        $crawler->filter('div.leechBlock>strong')->each(function($node) use(&$data, $k){
-            $data[$k]['leechers']=$node->text();
-        });
-        $crawler->filter('div.dataList>ul>li span')->eq(1)->each(function($node) use(&$data, $k){
-            $data[$k]['quality']=$node->text();
-        });
-        $crawler->filter('div.dataList>ul>li a')->eq(1)->each(function($node) use(&$data, $k){
-            $data[$k]['imdbId']=$node->text();
-        });
+        
+        foreach($this->torrentPageProvider as $pageProvider){
+            $this->getFilterCrawlerText($pageProvider[0], $pageProvider[1], $data, $k, $pageProvider[2]);
+        }
+    }
+    
+    /**
+     * shortCut for simple filter crawler request with eq facultative param
+     * @param type $selector
+     * @param type $key
+     * @param type $data
+     * @param type $k
+     * @param type $params
+     */
+    public function getFilterCrawlerText($selector, $key, &$data, $k, $params=[]){
+        if(isset($params['eq'])){
+            $eq=intval($params['eq']);
+            $this->crawler->filter($selector)->eq($eq)->each(function($node) use(&$data, $k, $key){
+                $data[$k][$key]=$node->text();
+            });
+        }else{
+            $this->crawler->filter($selector)->each(function($node) use(&$data, $k, $key){
+                $data[$k][$key]=$node->text();
+            });
+        }
     }
     
     /**

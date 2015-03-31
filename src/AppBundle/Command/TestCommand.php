@@ -5,7 +5,6 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-
 class TestCommand extends ContainerAwareCommand{
     protected function configure(){
         $this->setName("torrent:parse:KickAss")->setDescription('Command to parse kick ass and get url');
@@ -16,7 +15,7 @@ class TestCommand extends ContainerAwareCommand{
         $parser=$container->get('parser_torrent_service');
         
         $data=array_reverse($parser->getDataTorrent());
-        
+        var_dump($data); die();
         $register=$container->get('register_from_parser');
         if($register->registerDatas($data)){
             $output->writeln('<info>Torrents registered with success</info>');
