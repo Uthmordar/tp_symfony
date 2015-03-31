@@ -1,5 +1,4 @@
 <?php
-
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -10,8 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="AppBundle\Entity\CategoryRepository")
  */
-class Category
-{
+class Category{
     /**
      * @var integer
      *
@@ -39,8 +37,7 @@ class Category
      *
      * @return integer 
      */
-    public function getId()
-    {
+    public function getId(){
         return $this->id;
     }
 
@@ -50,8 +47,7 @@ class Category
      * @param string $name
      * @return Category
      */
-    public function setName($name)
-    {
+    public function setName($name){
         $this->name = $name;
 
         return $this;
@@ -62,15 +58,13 @@ class Category
      *
      * @return string 
      */
-    public function getName()
-    {
+    public function getName(){
         return $this->name;
     }
     /**
      * Constructor
      */
-    public function __construct()
-    {
+    public function __construct(){
         $this->movies = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -80,8 +74,7 @@ class Category
      * @param \AppBundle\Entity\Movie $movies
      * @return Category
      */
-    public function addMovie(\AppBundle\Entity\Movie $movies)
-    {
+    public function addMovie(\AppBundle\Entity\Movie $movies){
         $this->movies[] = $movies;
 
         return $this;
@@ -92,8 +85,7 @@ class Category
      *
      * @param \AppBundle\Entity\Movie $movies
      */
-    public function removeMovie(\AppBundle\Entity\Movie $movies)
-    {
+    public function removeMovie(\AppBundle\Entity\Movie $movies){
         $this->movies->removeElement($movies);
     }
 
@@ -102,8 +94,7 @@ class Category
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getMovies()
-    {
+    public function getMovies(){
         return $this->movies;
     }
 }

@@ -12,8 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="AppBundle\Entity\TorrentRepository")
  * @ORM\HasLifecycleCallbacks()
  */
-class Torrent
-{
+class Torrent{
     /**
      * @var integer
      *
@@ -107,8 +106,7 @@ class Torrent
      *
      * @return integer 
      */
-    public function getId()
-    {
+    public function getId(){
         return $this->id;
     }
 
@@ -118,10 +116,8 @@ class Torrent
      * @param string $name
      * @return Torrent
      */
-    public function setName($name)
-    {
+    public function setName($name){
         $this->name = $name;
-
         return $this;
     }
 
@@ -130,8 +126,7 @@ class Torrent
      *
      * @return string 
      */
-    public function getName()
-    {
+    public function getName(){
         return $this->name;
     }
 
@@ -141,10 +136,8 @@ class Torrent
      * @param string $magnet
      * @return Torrent
      */
-    public function setMagnet($magnet)
-    {
+    public function setMagnet($magnet){
         $this->magnet = $magnet;
-
         return $this;
     }
 
@@ -153,8 +146,7 @@ class Torrent
      *
      * @return string 
      */
-    public function getMagnet()
-    {
+    public function getMagnet(){
         return $this->magnet;
     }
 
@@ -164,10 +156,8 @@ class Torrent
      * @param string $hash
      * @return Torrent
      */
-    public function setHash($hash)
-    {
+    public function setHash($hash){
         $this->hash = $hash;
-
         return $this;
     }
 
@@ -176,8 +166,7 @@ class Torrent
      *
      * @return string 
      */
-    public function getHash()
-    {
+    public function getHash(){
         return $this->hash;
     }
 
@@ -187,10 +176,8 @@ class Torrent
      * @param string $seeders
      * @return Torrent
      */
-    public function setSeeders($seeders)
-    {
+    public function setSeeders($seeders){
         $this->seeders = $seeders;
-
         return $this;
     }
 
@@ -199,8 +186,7 @@ class Torrent
      *
      * @return string 
      */
-    public function getSeeders()
-    {
+    public function getSeeders(){
         return $this->seeders;
     }
 
@@ -210,10 +196,8 @@ class Torrent
      * @param string $leetchers
      * @return Torrent
      */
-    public function setLeetchers($leetchers)
-    {
+    public function setLeetchers($leetchers){
         $this->leetchers = $leetchers;
-
         return $this;
     }
 
@@ -222,8 +206,7 @@ class Torrent
      *
      * @return string 
      */
-    public function getLeetchers()
-    {
+    public function getLeetchers(){
         return $this->leetchers;
     }
 
@@ -233,10 +216,8 @@ class Torrent
      * @param string $quality
      * @return Torrent
      */
-    public function setQuality($quality)
-    {
+    public function setQuality($quality){
         $this->quality = $quality;
-
         return $this;
     }
 
@@ -245,8 +226,7 @@ class Torrent
      *
      * @return string 
      */
-    public function getQuality()
-    {
+    public function getQuality(){
         return $this->quality;
     }
     
@@ -256,10 +236,8 @@ class Torrent
      * @param string $qualityType
      * @return Torrent
      */
-    public function setQualityType($qualityType)
-    {
+    public function setQualityType($qualityType){
         $this->qualityType = $qualityType;
-
         return $this;
     }
 
@@ -268,8 +246,7 @@ class Torrent
      *
      * @return string 
      */
-    public function getQualityType()
-    {
+    public function getQualityType(){
         return $this->qualityType;
     }
 
@@ -279,10 +256,8 @@ class Torrent
      * @param boolean $block
      * @return Torrent
      */
-    public function setBlock($block)
-    {
+    public function setBlock($block){
         $this->block = $block;
-
         return $this;
     }
 
@@ -291,8 +266,7 @@ class Torrent
      *
      * @return boolean 
      */
-    public function getBlock()
-    {
+    public function getBlock(){
         return $this->block;
     }
     
@@ -302,10 +276,8 @@ class Torrent
      * @param \DateTime $dateCreated
      * @return Torrent
      */
-    public function setDateCreated($dateCreated)
-    {
+    public function setDateCreated($dateCreated){
         $this->dateCreated = $dateCreated;
-
         return $this;
     }
 
@@ -314,8 +286,7 @@ class Torrent
      *
      * @return \DateTime 
      */
-    public function getDateCreated()
-    {
+    public function getDateCreated(){
         return $this->dateCreated;
     }
 
@@ -337,8 +308,7 @@ class Torrent
      *
      * @return \AppBundle\Entity\Movie 
      */
-    public function getMovie()
-    {
+    public function getMovie(){
         return $this->movie;
     }
     

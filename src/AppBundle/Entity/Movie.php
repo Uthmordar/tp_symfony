@@ -119,8 +119,7 @@ class Movie{
      *
      * @return integer 
      */
-    public function getId()
-    {
+    public function getId(){
         return $this->id;
     }
 
@@ -130,10 +129,8 @@ class Movie{
      * @param string $title
      * @return Movie
      */
-    public function setTitle($title)
-    {
+    public function setTitle($title){
         $this->title = $title;
-
         return $this;
     }
 
@@ -142,8 +139,7 @@ class Movie{
      *
      * @return string 
      */
-    public function getTitle()
-    {
+    public function getTitle(){
         return $this->title;
     }
 
@@ -153,10 +149,8 @@ class Movie{
      * @param integer $imdbId
      * @return Movie
      */
-    public function setImdbId($imdbId)
-    {
+    public function setImdbId($imdbId){
         $this->imdbId = $imdbId;
-
         return $this;
     }
 
@@ -165,8 +159,7 @@ class Movie{
      *
      * @return integer 
      */
-    public function getImdbId()
-    {
+    public function getImdbId(){
         return $this->imdbId;
     }
 
@@ -176,10 +169,8 @@ class Movie{
      * @param string $year
      * @return Movie
      */
-    public function setYear($year)
-    {
+    public function setYear($year){
         $this->year = $year;
-
         return $this;
     }
 
@@ -188,8 +179,7 @@ class Movie{
      *
      * @return string 
      */
-    public function getYear()
-    {
+    public function getYear(){
         return $this->year;
     }
 
@@ -199,10 +189,8 @@ class Movie{
      * @param string $director
      * @return Movie
      */
-    public function setDirector($director)
-    {
+    public function setDirector($director){
         $this->director = $director;
-
         return $this;
     }
 
@@ -211,8 +199,7 @@ class Movie{
      *
      * @return string 
      */
-    public function getDirector()
-    {
+    public function getDirector(){
         return $this->director;
     }
 
@@ -222,10 +209,8 @@ class Movie{
      * @param string $image
      * @return Movie
      */
-    public function setImage($image)
-    {
+    public function setImage($image){
         $this->image = $image;
-
         return $this;
     }
 
@@ -234,8 +219,7 @@ class Movie{
      *
      * @return string 
      */
-    public function getImage()
-    {
+    public function getImage(){
         return $this->image;
     }
 
@@ -245,10 +229,8 @@ class Movie{
      * @param float $rating
      * @return Movie
      */
-    public function setRating($rating)
-    {
+    public function setRating($rating){
         $this->rating = $rating;
-
         return $this;
     }
 
@@ -257,8 +239,7 @@ class Movie{
      *
      * @return float 
      */
-    public function getRating()
-    {
+    public function getRating(){
         return $this->rating;
     }
 
@@ -268,10 +249,8 @@ class Movie{
      * @param integer $ratingCount
      * @return Movie
      */
-    public function setRatingCount($ratingCount)
-    {
+    public function setRatingCount($ratingCount){
         $this->ratingCount = $ratingCount;
-
         return $this;
     }
 
@@ -280,8 +259,7 @@ class Movie{
      *
      * @return integer 
      */
-    public function getRatingCount()
-    {
+    public function getRatingCount(){
         return $this->ratingCount;
     }
 
@@ -291,10 +269,8 @@ class Movie{
      * @param boolean $seen
      * @return Movie
      */
-    public function setSeen($seen)
-    {
+    public function setSeen($seen){
         $this->seen = $seen;
-
         return $this;
     }
 
@@ -303,8 +279,7 @@ class Movie{
      *
      * @return boolean 
      */
-    public function getSeen()
-    {
+    public function getSeen(){
         return $this->seen;
     }
 
@@ -314,10 +289,8 @@ class Movie{
      * @param boolean $block
      * @return Movie
      */
-    public function setBlock($block)
-    {
+    public function setBlock($block){
         $this->block = $block;
-
         return $this;
     }
 
@@ -326,8 +299,7 @@ class Movie{
      *
      * @return boolean 
      */
-    public function getBlock()
-    {
+    public function getBlock(){
         return $this->block;
     }
     
@@ -337,10 +309,8 @@ class Movie{
      * @param \DateTime $dateCreated
      * @return Torrent
      */
-    public function setDateCreated($dateCreated)
-    {
+    public function setDateCreated($dateCreated){
         $this->dateCreated = $dateCreated;
-
         return $this;
     }
 
@@ -349,15 +319,13 @@ class Movie{
      *
      * @return \DateTime 
      */
-    public function getDateCreated()
-    {
+    public function getDateCreated(){
         return $this->dateCreated;
     }
     /**
      * Constructor
      */
-    public function __construct()
-    {
+    public function __construct(){
         $this->torrents = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -405,8 +373,7 @@ class Movie{
      * @param \AppBundle\Entity\Category $categories
      * @return Movie
      */
-    public function addCategory(\AppBundle\Entity\Category $categories)
-    {
+    public function addCategory(\AppBundle\Entity\Category $categories){
         $this->categories[] = $categories;
         $categories->addMovie($this);
         
@@ -418,8 +385,7 @@ class Movie{
      *
      * @param \AppBundle\Entity\Category $categories
      */
-    public function removeCategory(\AppBundle\Entity\Category $categories)
-    {
+    public function removeCategory(\AppBundle\Entity\Category $categories){
         $this->categories->removeElement($categories);
     }
 
@@ -428,8 +394,7 @@ class Movie{
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getCategories()
-    {
+    public function getCategories(){
         return $this->categories;
     }
 }

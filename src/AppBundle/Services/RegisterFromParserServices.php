@@ -95,9 +95,7 @@ class RegisterFromParserServices{
             $movie=new Movie();
 
             $movie->setDirector($d['director']);
-            if(!empty($d['image'])){
-                $movie->setImage($d['image']);
-            }
+            $movie->setImage($d['image']);
             $movie->setImdbId($d['imdbId']);
             $movie->setRating($d['rating']);
             $movie->setRatingCount($d['votes']);
