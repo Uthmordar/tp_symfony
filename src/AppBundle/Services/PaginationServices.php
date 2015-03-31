@@ -20,6 +20,6 @@ class PaginationServices{
             'hasPrevPage'=> ($p==1)? 1 : 0,
             'hasNextPage'=> ($p==$page)? 1 : 0,
             'firstResult'=> ($p-1)*$nbPage + 1,
-            'lastResult'=> ($p==$page)? ($p-1)*$nbPage + $page % $nbPage + 1 : ($p-1)*$nbPage + $nbPage];
+            'lastResult'=> ($p==$page)? $tot : ($p-1)*$nbPage + $nbPage];
     }
 }

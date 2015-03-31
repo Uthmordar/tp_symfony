@@ -14,7 +14,7 @@
         </tr>
         <tr>
             <td>Genre(s)</td>
-            <td>{%for genre in movie.categories%} {{genre.name}} {%endfor%}</td>
+            <td>{%for genre in movie.categories%}<a href="{{path('showCategory', {'name': genre.name})}}"> {{genre.name}}</a> {%endfor%}</td>
         </tr>
         <tr>
             <td>Director</td>
@@ -30,11 +30,11 @@
         </tr>
         <tr>
             <td>Seen</td>
-            <td><span class="glyphicon glyphicon-eye-{{movie.seen? "open text-success" : "close"}}" aria-hidden="true"></span></td>
+            <td><a href="{{path('seenMovie', {'id': movie.id})}}"><span class="glyphicon glyphicon-eye-{{movie.seen? "open text-success" : "close"}}" aria-hidden="true"></span></a></td>
         </tr>
         <tr>
             <td>Block</td>
-            <td><a href="" class="delete btn btn-danger"><span class="glyphicon glyphicon-warning-sign"></span>Blacklist</a></td>
+            <td><a href="{{path('blacklistMovie', {'id': movie.id})}}" class="delete btn btn-danger"><span class="glyphicon glyphicon-warning-sign"></span>Blacklist</a></td>
         </tr>
     </table>
     
@@ -61,4 +61,13 @@
 
 {% block javascripts %}
     {{parent()}}
+    <script>
+        $(function(){
+           $('.delete').on('click', function(e){
+               return confirm('Blacklist ?');
+           });
+           
+           $('li.disabled a').on('click', function(e){e.preventDefault();});
+        });
+    </script>
 {% endblock %}

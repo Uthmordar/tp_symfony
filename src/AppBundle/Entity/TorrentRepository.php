@@ -14,6 +14,11 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 class TorrentRepository extends EntityRepository{
     protected $nbTorrentHomeByPage=5;
     
+    /**
+     * 
+     * @param type $name
+     * @return type
+     */
     public function findTorrentByName($name){
         $qb=$this->createQueryBuilder("t");
         
@@ -24,6 +29,11 @@ class TorrentRepository extends EntityRepository{
         return $query->getResult();
     }
     
+    /**
+     * 
+     * @param type $p
+     * @return Paginator
+     */
     public function findNoBlockNoSeenTorrent($p){
         $query = $this->getEntityManager()
         ->createQuery('

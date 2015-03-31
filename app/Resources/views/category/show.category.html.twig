@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{# commentaire #}
+{% block title %}
+    {{ parent() }} : Back
+{% endblock %}
+
+{% block main_content %}
+    <h2>Category {{category.name}}</h2>
+    <nav>
+        <ul class="pagination">
+          <li {{(hasPrevPage)? "class='disabled'" : ""}}>
+            <a href="{{path('showCategory', {"name": category.name, "p":p-1})}}" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+          {% for i in range(start, stop) %}
+          <li {{(p==i)? "class='active'" : ""}}><a href="{{path('showCategory', {"name": category.name, "p":i})}}">{{i}}</a></li>
+          {% endfor %}
+          <li {{(hasNextPage)? "class='disabled'" : ""}}>
+            <a href="{{path('showCategory', {"name": category.name, "p":p+1})}}" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        </ul>
+    </nav>
+    <p>Result: {{firstResult}} to {{lastResult}} on {{tot}}</p>
+    <table class="table table-striped">
+        <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Movie name</th>
+                    <th>Rating</th>
+                    <th>Seen</th>
+                </tr>
+            </thead>
+    {% for movie in movies %}
+        <tr>
+            <td>{{((p-1)*nbPage)+loop.index}}</td>
+            <td><a href="{{path('showMovie', {'id': movie.id})}}"><img src="{{movie.image}}"/><p>{{movie.title}}</p></a></td>
+            <td>{{movie.rating}}/10 on {{movie.ratingCount}} votes</td>
+            <td><a href="{{path('seenMovie', {'id': movie.id})}}"><span class="glyphicon glyphicon-eye-{{movie.seen? "open text-success" : "close"}}" aria-hidden="true"></span></a></td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+{% endblock %}

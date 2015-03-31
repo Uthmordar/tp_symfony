@@ -47,7 +47,8 @@ class RegisterFromParserServices{
      * register dataset as movie // torrent
      * @param type $d
      */
-    public function registerData($d){       
+    public function registerData($d){
+        
         $categories=$this->registerCategories($d['genre']);
         $movie=$this->registerMovie($d, $categories);
         if($movie){
