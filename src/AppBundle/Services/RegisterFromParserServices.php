@@ -36,7 +36,7 @@ class RegisterFromParserServices{
         foreach($data as $d){
             if(!empty($d['imdbId']) && !empty($d['director']) && !empty($d['rating']) && !empty($d['votes']) 
                 && !empty($d['title']) && !empty($d['year']) && !empty($d['hash']) && !empty($d['leechers'])
-                    && !empty($d['magnet']) && !empty($d['ancre']) && !empty($d['quality']) && !empty($d['seeders']) && !in_array($d['qualityType'], ['cam', 'ts'])){
+                    && !empty($d['magnet']) && !empty($d['ancre']) && !empty($d['quality']) && !empty($d['seeders']) && $d['rating']>6 && !in_array($d['qualityType'], ['cam', 'ts'])){
                 $this->registerData($d);
             }
         }
@@ -47,14 +47,15 @@ class RegisterFromParserServices{
      * register dataset as movie // torrent
      * @param type $d
      */
-    public function registerData($d){
+    public function registerData($d){       
         $categories=$this->registerCategories($d['genre']);
         $movie=$this->registerMovie($d, $categories);
         if($movie){
-            $this->registerTorrent($movie, $d);
+            $torrent=$this->registerTorrent($movie, $d);
         }
-        
-        $this->manager->flush();
+        if($movie && $torrent){
+            $this->manager->flush();
+        }
     }
     
     public function registerCategories($cats){

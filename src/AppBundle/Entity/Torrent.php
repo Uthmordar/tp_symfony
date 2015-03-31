@@ -97,7 +97,7 @@ class Torrent
         
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Movie", inversedBy="torrents")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(name="movie_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     private $movie;
 

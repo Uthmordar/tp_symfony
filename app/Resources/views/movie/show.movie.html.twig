@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{# commentaire #}
+{% block title %}
+    {{ parent() }} : Back
+{% endblock %}
+
+{% block main_content %}
+    <h2><a href="http://www.imdb.com/title/tt{{movie.imdbId}}">{{movie.title}}</a></h2>
+    <table class="table table-striped">
+        <tr>
+            <td>Year</td>
+            <td>{{movie.year}}</td>
+        </tr>
+        <tr>
+            <td>Genre(s)</td>
+            <td>{%for genre in movie.categories%} {{genre.name}} {%endfor%}</td>
+        </tr>
+        <tr>
+            <td>Director</td>
+            <td>{{movie.director}}</td>
+        </tr>
+        <tr>
+            <td>Image</td>
+            <td><img src="{{movie.image}}"/></td>
+        </tr>
+        <tr>
+            <td>Rating</td>
+            <td>{{movie.rating}}/10 on {{movie.ratingCount}} votes</td>
+        </tr>
+        <tr>
+            <td>Seen</td>
+            <td><span class="glyphicon glyphicon-eye-{{movie.seen? "open text-success" : "close"}}" aria-hidden="true"></span></td>
+        </tr>
+        <tr>
+            <td>Block</td>
+            <td><a href="" class="delete btn btn-danger"><span class="glyphicon glyphicon-warning-sign"></span>Blacklist</a></td>
+        </tr>
+    </table>
+    
+    {%if movie.torrents %}
+    <h3>Torrents list</h3>
+    <table class="table table-striped">
+        <thead>
+            <th>Name</th>
+            <th>Quality</th>
+            <th>Magnet</th>
+        </thead>
+        <tbody>
+            {% for torrent in movie.torrents %}
+            <tr>
+                <td>{{torrent.name}}</td>
+                <td>{{torrent.qualityType}}</td>
+                <td><a href="{{torrent.magnet}}">{{torrent.hash}}</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+{% endblock %}

@@ -102,7 +102,7 @@ class ParserTorrentServices{
             $data[$k]['rating']=$node->text();
         });
         $crawler->filter('span[itemprop="ratingCount"]')->each(function($node) use(&$data, $k){
-            $data[$k]['votes']=$node->text();
+            $data[$k]['votes']=str_replace(',', '', $node->text());
         });
         $crawler->filter('span[itemprop="genre"]')->each(function($node) use(&$data, $k){
             $data[$k]['genre'][]=$node->text();

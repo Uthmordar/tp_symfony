@@ -60,6 +60,7 @@ class Movie{
 
     /**
      * @var string
+     * @Assert\NotBlank()
      * @Assert\Url()
      * @ORM\Column(name="image", type="string", length=255, nullable=true)
      */
@@ -67,9 +68,9 @@ class Movie{
 
     /**
      * @var float
-     * @Assert\NotBlank()
      * @Assert\Range(
-     *      min = 6.0
+     *      min=6.0,
+     *      max=10.0
      * )
      * @ORM\Column(name="rating", type="float")
      */

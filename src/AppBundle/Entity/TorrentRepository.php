@@ -29,7 +29,8 @@ class TorrentRepository extends EntityRepository{
         ->createQuery('
             SELECT t, m FROM AppBundle:Torrent t
             JOIN t.movie m
-            WHERE m.block=0 AND m.seen=0'
+            WHERE m.block=0 AND m.seen=0 AND t.block=0
+            ORDER BY t.dateCreated DESC'
         )->setMaxResults($this->nbTorrentHomeByPage)
         ->setFirstResult($this->nbTorrentHomeByPage * ($p-1));
         

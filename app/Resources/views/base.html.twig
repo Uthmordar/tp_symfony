@@ -3,12 +3,30 @@
     <head>
         <meta charset="UTF-8" />
         <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        <style>
+            #main_content{
+                width: 90%;
+                margin: 0 auto;
+            }
+        </style>
+        {% block stylesheets %}{% endblock %}
     </head>
     <body>
-        {% block main_content %}{% endblock %}
+        <section id="main_content">
+            {% for flashMessage in app.session.flashbag.get('success')%}
+                <div class="alert alert-success">
+                    {{flashMessage}}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('error')%}
+                <div class="alert alert-danger">
+                    {{flashMessage}}
+                </div>
+            {% endfor %}
+            {% block main_content %}{% endblock %}
+    </section>
         
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>

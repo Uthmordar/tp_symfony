@@ -29,4 +29,26 @@ class TorrentController extends Controller{
         
         return $this->render('torrent/index.torrent.html.twig', $params);
     }
+    
+    /**
+     * @Route("/torrent/blacklist/{id}", name="blacklistTorrent")
+     * @param type $id
+     */
+    public function blacklistAction($id){
+        $torrentRepo=$this->getDoctrine()->getRepository("AppBundle:Torrent");
+        $torrent=$torrentRepo->find($id);
+        
+        if(!$torrent){
+            $this->addFlash("error", "no torrent with this id");
+            return $this->redirectToRoute("indexTorrent");
+        }
+        
+        $em=$this->getDoctrine()->getManager();
+        $torrent->setBlock(1);
+        $em->flush();
+        
+        $this->addFlash("success", "torrent blacklisted");
+
+        return $this->redirectToRoute("indexTorrent");
+    }
 }

@@ -35,17 +35,20 @@
                 <tr>
                     <th>#</th>
                     <th>Torrent name</th>
+                    <th>Date</th>
+                    <th>Magnet</th>
                     <th>Movie</th>
-                    <th>Actions</th>
+                    <th>BL</th>
                 </tr>
             </thead>
     {% for torrent in torrents %}
         <tr>
             <td>{{((p-1)*nbPage)+loop.index}}</td>
             <td><h4><a href="">{{torrent.name}}</a></h4></td>
-            <td>{{torrent.movie.title}}</td>
-            <td><a href="">modifier</a>
-            <a href="" class="delete btn btn-danger"><span class="glyphicon glyphicon-warning-sign"></span>Delete</a></td>
+            <td>{{torrent.dateCreated|date('d-m-Y H:i:s')}}</td>
+            <td><a href="{{torrent.magnet}}">{{torrent.hash}}</a></td>
+            <td><a href="{{path('showMovie', {'id': torrent.movie.id})}}"><img src="{{torrent.movie.image}}"/><p>{{torrent.movie.title}}</p></a></td>
+            <td><a href="{{path('blacklistTorrent', {'id': torrent.id})}}" class="delete btn btn-danger"><span class="glyphicon glyphicon-warning-sign"></span>Blacklist</a></td>
         </tr>
     {% endfor %}
     </table>
@@ -56,7 +59,7 @@
     <script>
         $(function(){
            $('.delete').on('click', function(e){
-               return confirm('Delete ?');
+               return confirm('Blacklist ?');
            });
            
            $('li.disabled a').on('click', function(e){e.preventDefault()});

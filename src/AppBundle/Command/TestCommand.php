@@ -15,8 +15,8 @@ class TestCommand extends ContainerAwareCommand{
         $container=$this->getContainer();
         $parser=$container->get('parser_torrent_service');
         
-        $data=$parser->getDataTorrent();
-         
+        $data=array_reverse($parser->getDataTorrent());
+        
         $register=$container->get('register_from_parser');
         if($register->registerDatas($data)){
             $output->writeln('<info>Torrents registered with success</info>');
