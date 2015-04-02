@@ -122,11 +122,11 @@ class ParserTorrentServices{
         if(isset($params['eq'])){
             $eq=intval($params['eq']);
             $this->crawler->filter($selector)->eq($eq)->each(function($node) use(&$data, $k, $key, $params){
-                $data[$k][$key]=(isset($params['get']))? $node->$params['get']['fn']($params['get']['param'])  : $node->text();
+                $data[$k][$key]=(isset($params['get']))? $node->$params['get']['fn']($params['get']['param']) : $node->text();
             });
         }else{
             $this->crawler->filter($selector)->each(function($node) use(&$data, $k, $key, $params){
-                $data[$k][$key]=(isset($params['get']))? $node->$params['get']['fn']($params['get']['param'])  : $node->text();
+                $data[$k][$key]=(isset($params['get']))? $node->$params['get']['fn']($params['get']['param']) : $node->text();
             });
         }
         if(isset($params['filter']) && is_callable($params['filter'])){
@@ -135,18 +135,14 @@ class ParserTorrentServices{
     }
           
     public function setQualityType($name){
-        if(preg_match('/( brrip | bluray )/i', $name)){
-            return 'BluRay';
-        }else if(preg_match('/(hdrip)/i', $name)){
-            return 'HD';
-        }else if(preg_match('/( cam )/i', $name)){
-            return 'cam';
-        }else if(preg_match('/( ts )/i', $name)){
-            return 'ts';
-        }else if(preg_match('/( xvid )/i', $name)){
-            return 'XviD';
-        }else{
-            return 'Unknow';
+        preg_match('/(?<BluRay> brrip | bluray)|(?<HD>hdrip)|(?<cam> cam )|(?<ts> ts )|(?<XviD> xvid )/i', $name, $matches);
+        if($matches){
+            foreach($matches as $q=>$match){
+                if(!is_int($q)){
+                    return $q;
+                }
+            }
         }
+        return 'Unknow';
     }
 }
