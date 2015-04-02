@@ -4,7 +4,6 @@ namespace AppBundle\Services;
 use Goutte\Client;
 
 class ParserTorrentServices{
-    
     protected $data=[];
     protected $client;
     protected $baseUrl='http://kickass.to/movies/?field=seeders&sorder=desc';
@@ -118,7 +117,11 @@ class ParserTorrentServices{
             $this->data[$k][$key]=$params['filter']($this->data[$k][$key]);
         }
     }
-      
+    
+    /**
+     * get magnet && set hash from it
+     * @param type $k
+     */
     public function setHash($k){
         if(!empty($this->data[$k]['magnet'])){
             preg_match('/btih:(?<hash>\w*)&/', $this->data[$k]['magnet'], $matches);
@@ -126,6 +129,11 @@ class ParserTorrentServices{
         }
     }
           
+    /**
+     * extract quality type from torrent name
+     * @param type $name
+     * @return string
+     */
     public function setQualityType($name){
         preg_match('/(?<BluRay> brrip | bluray)|(?<HD>hdrip|HDTC)|(?<cam> cam )|(?<ts> ts )|(?<XviD>xvid|dvdrip)/i', $name, $matches);
         if($matches){

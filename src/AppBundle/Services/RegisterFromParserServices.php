@@ -140,6 +140,11 @@ class RegisterFromParserServices{
         }
     }
     
+    /**
+     * @param type $data
+     * @param type $categories
+     * @return Movie
+     */
     public function generateNewMovie($data, $categories){
         $movie=new Movie();
 
@@ -155,6 +160,11 @@ class RegisterFromParserServices{
         return $movie;
     }
     
+    /**
+     * @param type $data
+     * @param Movie $movie
+     * @return Movie
+     */
     public function updateMovie($data, \AppBundle\Entity\Movie $movie){
         $movie->setRating($data['rating'])
             ->setRatingCount($data['votes']);
@@ -162,6 +172,11 @@ class RegisterFromParserServices{
         return $movie;
     }
     
+    /**
+     * @param type $data
+     * @param Movie $movie
+     * @return Torrent
+     */
     public function generateNewTorrent($data, \AppBundle\Entity\Movie $movie){
         $torrent=new Torrent();
 
@@ -177,6 +192,11 @@ class RegisterFromParserServices{
         return $torrent;
     }
     
+    /**
+     * @param type $data
+     * @param Torrent $torrent
+     * @return Torrent
+     */
     public function updateTorrent($data, \AppBundle\Entity\Torrent $torrent){
         $torrent->setSeeders($data['seeders'])
             ->setLeetchers($data['leechers']);
