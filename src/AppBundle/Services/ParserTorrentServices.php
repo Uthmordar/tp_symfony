@@ -32,7 +32,7 @@ class ParserTorrentServices{
         ['div[itemprop="director"] span[itemprop="name"]', 'director', []],
         ['#img_primary img[itemprop="image"]', 'image', ['eq'=>0, 'get'=>['fn'=>'attr', 'param'=>'src']]],
         ['span[itemprop="ratingValue"]', 'rating', []],
-        ['span[itemprop="genre"]', 'genre', []]
+        ['span[itemprop="genre"]', 'genre', ['multiple'=>1]]
     ];
     
     public function __construct(){
@@ -69,7 +69,7 @@ class ParserTorrentServices{
     public function getTorrentList(&$data){
         $crawler=$this->client->request('GET', $this->baseUrl);
         
-        $crawler->filter('div.torrentname>div.filmType>a.cellMainLink')->eq(1)->each(function($node) use(&$data, $crawler){
+        $crawler->filter('div.torrentname>div.filmType>a.cellMainLink')->each(function($node) use(&$data, $crawler){
             $ancre=$node->text();
             $link=$crawler->selectLink($node->text());
             $qT=$this->setQualityType($ancre);
@@ -123,6 +123,10 @@ class ParserTorrentServices{
             $eq=intval($params['eq']);
             $this->crawler->filter($selector)->eq($eq)->each(function($node) use(&$data, $k, $key, $params){
                 $data[$k][$key]=(isset($params['get']))? $node->$params['get']['fn']($params['get']['param']) : $node->text();
+            });
+        }else if(isset($params['multiple']) && $params['multiple']){
+            $this->crawler->filter($selector)->each(function($node) use(&$data, $k, $key, $params){
+                $data[$k][$key][]=(isset($params['get']))? $node->$params['get']['fn']($params['get']['param']) : $node->text();
             });
         }else{
             $this->crawler->filter($selector)->each(function($node) use(&$data, $k, $key, $params){
