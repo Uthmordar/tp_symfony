@@ -100,9 +100,7 @@ class RegisterFromParserServices{
         $result=$this->movieRepo->findMovieByImdb($d['imdbId']);
                 
         if(!empty($result)){
-            $movie=$result[0];
-            $movie->setRating($d['rating']);
-            $movie->setRatingCount($d['votes']);
+            $movie=$this->updateMovie($d, $result[0]);
         }else{
             $movie=$this->generateNewMovie($d, $categories);
         }
@@ -120,9 +118,7 @@ class RegisterFromParserServices{
         $resultT=$this->torrentRepo->findTorrentByName($d['ancre']);
                 
         if(!empty($resultT)){
-            $torrent=$resultT[0];
-            $torrent->setSeeders($d['seeders']);
-            $torrent->setLeetchers($d['leechers']);
+            $torrent=$this->updateTorrent($d, $resultT[0]);
         }else{
             $torrent=$this->generateNewTorrent($d, $movie);
         }
@@ -147,14 +143,21 @@ class RegisterFromParserServices{
     public function generateNewMovie($data, $categories){
         $movie=new Movie();
 
-        $movie->setDirector($data['director']);
-        $movie->setImage($data['image']);
-        $movie->setImdbId($data['imdbId']);
-        $movie->setRating($data['rating']);
-        $movie->setRatingCount($data['votes']);
-        $movie->setTitle(trim(str_replace('"', "'", $data['title'])));
-        $movie->setYear($data['year']);
-        $movie->addCategory($categories);
+        $movie->setDirector($data['director'])
+            ->setImage($data['image'])
+            ->setImdbId($data['imdbId'])
+            ->setRating($data['rating'])
+            ->setRatingCount($data['votes'])
+            ->setTitle(trim(str_replace('"', "'", $data['title'])))
+            ->setYear($data['year'])
+            ->addCategory($categories);
+        
+        return $movie;
+    }
+    
+    public function updateMovie($data, \AppBundle\Entity\Movie $movie){
+        $movie->setRating($data['rating'])
+            ->setRatingCount($data['votes']);
         
         return $movie;
     }
@@ -162,14 +165,21 @@ class RegisterFromParserServices{
     public function generateNewTorrent($data, \AppBundle\Entity\Movie $movie){
         $torrent=new Torrent();
 
-        $torrent->setHash($data['hash']);
-        $torrent->setLeetchers($data['leechers']);
-        $torrent->setMagnet($data['magnet']);
-        $torrent->setName($data['ancre']);
-        $torrent->setQuality($data['quality']);
-        $torrent->setSeeders($data['seeders']);
-        $torrent->setQualityType($data['qualityType']);
-        $torrent->setMovie($movie);
+        $torrent->setHash($data['hash'])
+            ->setLeetchers($data['leechers'])
+            ->setMagnet($data['magnet'])
+            ->setName($data['ancre'])
+            ->setQuality($data['quality'])
+            ->setSeeders($data['seeders'])
+            ->setQualityType($data['qualityType'])
+            ->setMovie($movie);
+        
+        return $torrent;
+    }
+    
+    public function updateTorrent($data, \AppBundle\Entity\Torrent $torrent){
+        $torrent->setSeeders($data['seeders'])
+            ->setLeetchers($data['leechers']);
         
         return $torrent;
     }
