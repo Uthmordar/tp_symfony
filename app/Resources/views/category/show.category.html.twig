@@ -7,6 +7,7 @@
 
 {% block main_content %}
     <h2>Category {{category.name}}</h2>
+    {% if(stop>1) %}
     <nav>
         <ul class="pagination">
           <li {{(hasPrevPage)? "class='disabled'" : ""}}>
@@ -24,6 +25,7 @@
           </li>
         </ul>
     </nav>
+    {% endif %}
     <p>Result: {{firstResult}} to {{lastResult}} on {{tot}}</p>
     <table class="table table-striped">
         <thead>

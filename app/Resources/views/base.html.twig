@@ -9,11 +9,13 @@
             #main_content{
                 width: 90%;
                 margin: 0 auto;
+                height:100vh;
             }
         </style>
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
+        <div id="layout"></div>
         {% include('include/header.html.twig') %}
         <section id="main_content">
             {% for flashMessage in app.session.flashbag.get('success')%}
@@ -27,7 +29,7 @@
                 </div>
             {% endfor %}
             {% block main_content %}{% endblock %}
-    </section>
+        </section>
         
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
