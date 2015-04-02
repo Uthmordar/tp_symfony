@@ -139,7 +139,7 @@ class ParserTorrentServices{
     }
           
     public function setQualityType($name){
-        preg_match('/(?<BluRay> brrip | bluray)|(?<HD>hdrip)|(?<cam> cam )|(?<ts> ts )|(?<XviD> xvid )/i', $name, $matches);
+        preg_match('/(?<BluRay> brrip | bluray)|(?<HD>hdrip|HDTC)|(?<cam> cam )|(?<ts> ts )|(?<XviD>xvid|dvdrip)/i', $name, $matches);
         if($matches){
             foreach($matches as $q=>$match){
                 if(!is_int($q)){
