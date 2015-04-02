@@ -15,15 +15,32 @@ class ParserTorrentServices{
      * @var type 
      */
     protected $torrentPageProvider=[
+        ['a.magnetlinkButton', 'magnet', ['get'=>['fn'=>'attr', 'param'=>'href']]],
         ['div.dataList>ul>li span', 'title', ['eq'=>0]],
         ['div.seedBlock>strong', 'seeders', []],
         ['div.leechBlock>strong', 'leechers', []],
         ['div.dataList>ul>li span', 'quality', ['eq'=>1]],
-        ['div.dataList>ul>li a', 'imdbId', ['eq'=>1]]
+        ['div.dataList>ul>li a', 'imdbId', ['eq'=>1]],
+    ];
+    
+    /**
+     * data provider selector for imdb page
+     * @var type 
+     */
+    protected $imdbProvider=[
+        ['h1.header>span.nobr>a', 'year', []],
+        ['div[itemprop="director"] span[itemprop="name"]', 'director', []],
+        ['#img_primary img[itemprop="image"]', 'image', ['eq'=>0, 'get'=>['fn'=>'attr', 'param'=>'src']]],
+        ['span[itemprop="ratingValue"]', 'rating', []],
+        ['span[itemprop="genre"]', 'genre', []]
     ];
     
     public function __construct(){
         $this->client=new Client();
+        $t=function($text){
+            return str_replace(',', '', $text);
+        };
+        $this->imdbProvider[]=['span[itemprop="ratingCount"]', 'votes', ['filter'=>$t]];
     }
     
     /**
@@ -52,7 +69,7 @@ class ParserTorrentServices{
     public function getTorrentList(&$data){
         $crawler=$this->client->request('GET', $this->baseUrl);
         
-        $crawler->filter('div.torrentname>div.filmType>a.cellMainLink')->each(function($node) use(&$data, $crawler){
+        $crawler->filter('div.torrentname>div.filmType>a.cellMainLink')->eq(1)->each(function($node) use(&$data, $crawler){
             $ancre=$node->text();
             $link=$crawler->selectLink($node->text());
             $qT=$this->setQualityType($ancre);
@@ -64,21 +81,32 @@ class ParserTorrentServices{
     /**
      * get data from torrent page
      * @param type $data
-     * @param type $k
+     * @param type $k current data table index
      * @param type $torrent
      */
     public function getTorrentPageData(&$data, $k, $torrent){
         $this->crawler=$this->client->request('GET', $torrent['uri']);
-
-        $this->crawler->filter('a.magnetlinkButton')->each(function($node) use(&$data, $k){
-            $magnet=$node->attr('href');
-            preg_match('/btih:(?<hash>\w*)&/', $magnet, $matches);
-            $data[$k]['magnet']=$magnet;
-            $data[$k]['hash']=$matches['hash'];
-        });
-        
+       
         foreach($this->torrentPageProvider as $pageProvider){
             $this->getFilterCrawlerText($pageProvider[0], $pageProvider[1], $data, $k, $pageProvider[2]);
+        }
+        if(!empty($data[$k]['magnet'])){
+            preg_match('/btih:(?<hash>\w*)&/', $data[$k]['magnet'], $matches);
+            $data[$k]['hash']=$matches['hash'];
+        }
+    }
+    
+    /**
+     * get data from imdbb page
+     * @param type $data
+     * @param type $k
+     * @param type $torrent
+     */
+    public function getTorrentImdbData(&$data, $k, $torrent){
+        $this->crawler=$this->client->request('GET', 'http://www.imdb.com/title/tt'.$torrent['imdbId']);
+        
+        foreach($this->imdbProvider as $imdbProvider){
+            $this->getFilterCrawlerText($imdbProvider[0], $imdbProvider[1], $data, $k, $imdbProvider[2]);
         }
     }
     
@@ -93,45 +121,19 @@ class ParserTorrentServices{
     public function getFilterCrawlerText($selector, $key, &$data, $k, $params=[]){
         if(isset($params['eq'])){
             $eq=intval($params['eq']);
-            $this->crawler->filter($selector)->eq($eq)->each(function($node) use(&$data, $k, $key){
-                $data[$k][$key]=$node->text();
+            $this->crawler->filter($selector)->eq($eq)->each(function($node) use(&$data, $k, $key, $params){
+                $data[$k][$key]=(isset($params['get']))? $node->$params['get']['fn']($params['get']['param'])  : $node->text();
             });
         }else{
-            $this->crawler->filter($selector)->each(function($node) use(&$data, $k, $key){
-                $data[$k][$key]=$node->text();
+            $this->crawler->filter($selector)->each(function($node) use(&$data, $k, $key, $params){
+                $data[$k][$key]=(isset($params['get']))? $node->$params['get']['fn']($params['get']['param'])  : $node->text();
             });
         }
+        if(isset($params['filter']) && is_callable($params['filter'])){
+            $data[$k][$key]=$params['filter']($data[$k][$key]);
+        }
     }
-    
-    /**
-     * get data from imdbb page
-     * @param type $data
-     * @param type $k
-     * @param type $torrent
-     */
-    public function getTorrentImdbData(&$data, $k, $torrent){
-        $crawler=$this->client->request('GET', 'http://www.imdb.com/title/tt'.$torrent['imdbId']);
-
-        $crawler->filter('h1.header>span.nobr>a')->each(function($node) use(&$data, $k){
-            $data[$k]['year']=$node->text();
-        });
-        $crawler->filter('div[itemprop="director"] span[itemprop="name"]')->each(function($node) use(&$data, $k){
-            $data[$k]['director']=$node->text();
-        });
-        $crawler->filter('#img_primary img[itemprop="image"]')->eq(0)->each(function($node) use(&$data, $k){
-            $data[$k]['image']=$node->attr('src');
-        });
-        $crawler->filter('span[itemprop="ratingValue"]')->each(function($node) use(&$data, $k){
-            $data[$k]['rating']=$node->text();
-        });
-        $crawler->filter('span[itemprop="ratingCount"]')->each(function($node) use(&$data, $k){
-            $data[$k]['votes']=str_replace(',', '', $node->text());
-        });
-        $crawler->filter('span[itemprop="genre"]')->each(function($node) use(&$data, $k){
-            $data[$k]['genre'][]=$node->text();
-        });
-    }
-    
+          
     public function setQualityType($name){
         if(preg_match('/( brrip | bluray )/i', $name)){
             return 'BluRay';
