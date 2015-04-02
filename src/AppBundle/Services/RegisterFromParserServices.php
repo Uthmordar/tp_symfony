@@ -154,9 +154,7 @@ class RegisterFromParserServices{
         $movie->setRatingCount($data['votes']);
         $movie->setTitle(trim(str_replace('"', "'", $data['title'])));
         $movie->setYear($data['year']);
-        foreach($categories as $cat){
-            $movie->addCategory($cat);
-        }
+        $movie->addCategory($categories);
         
         return $movie;
     }

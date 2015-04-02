@@ -48,68 +48,49 @@ class ParserTorrentServices{
      * @return type
      */
     public function getDataTorrent(){
-        $this->getTorrentList($this->data);
+        $this->getTorrentList();
         foreach($this->data as $k=>$torrent){
-            $this->getTorrentPageData($this->data, $k, $torrent);
+            $this->setRequestPageData($k, $this->torrentPageProvider, $torrent['uri'])->setHash($k);
         }
         foreach($this->data as $k=>$torrent){
             if(empty($torrent['imdbId'])){
                 continue;
             }
-            $this->getTorrentImdbData($this->data, $k, $torrent);
+            $this->setRequestPageData($k, $this->imdbProvider, 'http://www.imdb.com/title/tt'.$torrent['imdbId']);
         }
         return $this->data;
     }
     
     /**
      * get html from $baseUrl && get ancre uri from page
-     * @param type $data
      * @return type
      */
-    public function getTorrentList(&$data){
+    public function getTorrentList(){
         $this->crawler=$this->client->request('GET', $this->baseUrl);
         
-        $this->crawler->filter('div.torrentname>div.filmType>a.cellMainLink')->each(function($node) use(&$data, $crawler){
+        $this->crawler->filter('div.torrentname>div.filmType>a.cellMainLink')->each(function($node){
             $ancre=$node->text();
             $link=$this->crawler->selectLink($node->text());
             $qT=$this->setQualityType($ancre);
-            $data[]=['ancre'=>$ancre, 'uri'=>$link->link()->getUri(), 'qualityType'=>$qT, 'genre'=>[]];
+            $this->data[]=['ancre'=>$ancre, 'uri'=>$link->link()->getUri(), 'qualityType'=>$qT, 'genre'=>[]];
         });
-        return $data;
     }
     
     /**
-     * get data from torrent page
-     * @param type $data
-     * @param type $k current data table index
-     * @param type $torrent
-     */
-    public function getTorrentPageData(&$data, $k, $torrent){
-        $this->crawler=$this->client->request('GET', $torrent['uri']);
-       
-        foreach($this->torrentPageProvider as $pageProvider){
-            $this->getFilterCrawlerText($pageProvider[0], $pageProvider[1], $data, $k, $pageProvider[2]);
-        }
-        if(!empty($data[$k]['magnet'])){
-            preg_match('/btih:(?<hash>\w*)&/', $data[$k]['magnet'], $matches);
-            $data[$k]['hash']=$matches['hash'];
-        }
-    }
-    
-    /**
-     * get data from imdbb page
-     * @param type $data
+     * get data from request page
      * @param type $k
-     * @param type $torrent
+     * @param type $provider
+     * @param type $request
      */
-    public function getTorrentImdbData(&$data, $k, $torrent){
-        $this->crawler=$this->client->request('GET', 'http://www.imdb.com/title/tt'.$torrent['imdbId']);
-        
-        foreach($this->imdbProvider as $imdbProvider){
-            $this->getFilterCrawlerText($imdbProvider[0], $imdbProvider[1], $data, $k, $imdbProvider[2]);
+    public function setRequestPageData($k, $provider, $request){
+        $this->crawler=$this->client->request('GET', $request);
+       
+        foreach($provider as $pageParams){
+            $this->getFilterCrawlerText($pageParams[0], $pageParams[1], $k, $pageParams[2]);
         }
+        return $this;
     }
-    
+        
     /**
      * shortCut for simple filter crawler request with eq facultative param
      * @param type $selector
@@ -118,23 +99,30 @@ class ParserTorrentServices{
      * @param type $k
      * @param type $params
      */
-    public function getFilterCrawlerText($selector, $key, &$data, $k, $params=[]){
+    public function getFilterCrawlerText($selector, $key, $k, $params=[]){
         if(isset($params['eq'])){
             $eq=intval($params['eq']);
-            $this->crawler->filter($selector)->eq($eq)->each(function($node) use(&$data, $k, $key, $params){
-                $data[$k][$key]=(isset($params['get']))? $node->$params['get']['fn']($params['get']['param']) : $node->text();
+            $this->crawler->filter($selector)->eq($eq)->each(function($node) use($k, $key, $params){
+                $this->data[$k][$key]=(isset($params['get']))? $node->$params['get']['fn']($params['get']['param']) : $node->text();
             });
         }else if(isset($params['multiple']) && $params['multiple']){
-            $this->crawler->filter($selector)->each(function($node) use(&$data, $k, $key, $params){
-                $data[$k][$key][]=(isset($params['get']))? $node->$params['get']['fn']($params['get']['param']) : $node->text();
+            $this->crawler->filter($selector)->each(function($node) use($k, $key, $params){
+                $this->data[$k][$key][]=(isset($params['get']))? $node->$params['get']['fn']($params['get']['param']) : $node->text();
             });
         }else{
-            $this->crawler->filter($selector)->each(function($node) use(&$data, $k, $key, $params){
-                $data[$k][$key]=(isset($params['get']))? $node->$params['get']['fn']($params['get']['param']) : $node->text();
+            $this->crawler->filter($selector)->each(function($node) use($k, $key, $params){
+                $this->data[$k][$key]=(isset($params['get']))? $node->$params['get']['fn']($params['get']['param']) : $node->text();
             });
         }
         if(isset($params['filter']) && is_callable($params['filter'])){
-            $data[$k][$key]=$params['filter']($data[$k][$key]);
+            $this->data[$k][$key]=$params['filter']($this->data[$k][$key]);
+        }
+    }
+      
+    public function setHash($k){
+        if(!empty($this->data[$k]['magnet'])){
+            preg_match('/btih:(?<hash>\w*)&/', $this->data[$k]['magnet'], $matches);
+            $this->data[$k]['hash']=$matches['hash'];
         }
     }
           
