@@ -94,6 +94,7 @@ class RegisterFromParserServices{
     /**
      * register/update movie by imdbid
      * @param type $d
+     * @param array $categories
      * @return type
      */
     public function registerMovie($d, $categories){

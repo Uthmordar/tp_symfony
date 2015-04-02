@@ -66,7 +66,7 @@ class ParserTorrentServices{
      */
     public function getTorrentList(){
         $this->crawler=$this->client->request('GET', $this->baseUrl);
-        
+
         $this->crawler->filter('div.torrentname>div.filmType>a.cellMainLink')->each(function($node){
             $ancre=$node->text();
             $link=$this->crawler->selectLink($node->text());
@@ -77,13 +77,13 @@ class ParserTorrentServices{
     
     /**
      * get data from request page
-     * @param type $k
-     * @param type $provider
-     * @param type $request
+     * @param type index $k
+     * @param array $provider
+     * @param type uri $request
      */
     public function setRequestPageData($k, $provider, $request){
         $this->crawler=$this->client->request('GET', $request);
-       
+
         foreach($provider as $pageParams){
             $this->getFilterCrawlerText($pageParams[0], $pageParams[1], $k, $pageParams[2]);
         }
@@ -94,7 +94,6 @@ class ParserTorrentServices{
      * shortCut for simple filter crawler request with eq facultative param
      * @param type $selector
      * @param type $key
-     * @param type $data
      * @param type $k
      * @param type $params
      */
