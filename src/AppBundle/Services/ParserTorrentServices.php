@@ -67,11 +67,11 @@ class ParserTorrentServices{
      * @return type
      */
     public function getTorrentList(&$data){
-        $crawler=$this->client->request('GET', $this->baseUrl);
+        $this->crawler=$this->client->request('GET', $this->baseUrl);
         
-        $crawler->filter('div.torrentname>div.filmType>a.cellMainLink')->each(function($node) use(&$data, $crawler){
+        $this->crawler->filter('div.torrentname>div.filmType>a.cellMainLink')->each(function($node) use(&$data, $crawler){
             $ancre=$node->text();
-            $link=$crawler->selectLink($node->text());
+            $link=$this->crawler->selectLink($node->text());
             $qT=$this->setQualityType($ancre);
             $data[]=['ancre'=>$ancre, 'uri'=>$link->link()->getUri(), 'qualityType'=>$qT, 'genre'=>[]];
         });

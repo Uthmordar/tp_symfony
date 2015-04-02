@@ -94,9 +94,10 @@
                 e.preventDefault();
                 $('.modal').remove();
                 jQuery.ajax({
-                    url: $(this).attr('href')
+                    url: $(this).attr('href'),
+                    dataType: 'html'
                 }).done(function(html){
-                    var content=$($(html)[15]).html();
+                    var content=$($(html).filter('#main_content')).html();
                     var first='<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">\n\
 			  <div class="modal-header">\n\
 			    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>\n\
