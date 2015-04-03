@@ -60,11 +60,10 @@ class Movie{
 
     /**
      * @var string
-     * @Assert\NotBlank()
      * @Assert\Url()
      * @ORM\Column(name="image", type="string", length=255, nullable=true)
      */
-    private $image;
+    private $image=null;
 
     /**
      * @var float

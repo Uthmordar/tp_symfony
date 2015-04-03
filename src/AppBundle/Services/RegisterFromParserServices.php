@@ -33,8 +33,8 @@ class RegisterFromParserServices{
      */
     public function registerDatas($data){
         foreach($data as $d){
-            if(!empty($d['imdbId']) && !empty($d['director']) && !empty($d['title']) && !empty($d['year']) && !empty($d['leechers'])
-            && !empty($d['magnet']) && !empty($d['quality']) && !empty($d['seeders']) && $d['rating']>6 && !in_array($d['qualityType'], ['cam', 'ts'])){
+            if(!empty($d['director']) && !empty($d['title']) && !empty($d['year']) && !empty($d['leechers'])
+            && !empty($d['magnet']) && !empty($d['quality']) && !empty($d['seeders']) && !in_array($d['qualityType'], ['cam', 'ts'])){
                 $this->registerData($d);
             }
         }
@@ -148,13 +148,17 @@ class RegisterFromParserServices{
         $movie=new Movie();
 
         $movie->setDirector($data['director'])
-            ->setImage($data['image'])
             ->setImdbId($data['imdbId'])
             ->setRating($data['rating'])
             ->setRatingCount($data['votes'])
             ->setTitle(trim(str_replace('"', "'", $data['title'])))
-            ->setYear($data['year'])
-            ->addCategory($categories);
+            ->setYear($data['year']);
+        if(!empty($data['image'])){
+            $movie->setImage($data['image']);
+        }
+        foreach($categories as $cat){
+            $movie->addCategory($cat);
+        }
 
         return $movie;
     }
@@ -167,7 +171,10 @@ class RegisterFromParserServices{
     public function updateMovie($data, \AppBundle\Entity\Movie $movie){
         $movie->setRating($data['rating'])
             ->setRatingCount($data['votes']);
-
+        if(!empty($data['image'])){
+            $movie->setImage($data['image']);
+        }
+        
         return $movie;
     }
 

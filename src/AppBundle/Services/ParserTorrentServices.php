@@ -71,8 +71,8 @@ class ParserTorrentServices{
 
         $this->crawler->filter('div.torrentname>div.filmType>a.cellMainLink')->each(function($node){
             $ancre=$node->text();
-            $link=$this->crawler->selectLink($node->text());
-            $qT=$this->setQualityType($ancre);
+            $link=$this->crawler->selectLink($ancre);
+            $qT=$this->getQualityType($ancre);
             $this->data[]=['ancre'=>$ancre, 'uri'=>$link->link()->getUri(), 'qualityType'=>$qT, 'genre'=>[], 'votes'=>0, 'rating'=>0];
         });
     }
@@ -134,7 +134,7 @@ class ParserTorrentServices{
      * @param type $name
      * @return string
      */
-    public function setQualityType($name){
+    public function getQualityType($name){
         preg_match('/(?<BluRay> brrip | bluray)|(?<HD>hdrip|HDTC)|(?<cam> cam )|(?<ts> ts )|(?<XviD>xvid|dvdrip)/i', $name, $matches);
         if($matches){
             foreach($matches as $q=>$match){
