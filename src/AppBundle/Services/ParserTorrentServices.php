@@ -101,7 +101,7 @@ class ParserTorrentServices{
     public function getFilterCrawlerText($selector, $key, $k, $params=[]){
         $filter=$this->crawler->filter($selector);
         if(isset($params['eq'])){
-            $filter->eq(intval($params['eq']));
+            $filter=$filter->eq(intval($params['eq']));
         }
         $filter->each(function($node) use($k, $key, $params){
             $result=(isset($params['get']))? $node->$params['get']['fn']($params['get']['param']) : $node->text();
@@ -109,28 +109,11 @@ class ParserTorrentServices{
                 $result=$params['filter']($result);
             }
             if(isset($params['multiple']) && $params['multiple']){
-               $this->data[$k][$key][]=$result();
+               $this->data[$k][$key][]=$result;
             }else{
                $this->data[$k][$key]=$result;
             }
         });
-        /*if(isset($params['eq'])){
-            $eq=intval($params['eq']);
-            $this->crawler->filter($selector)->eq($eq)->each(function($node) use($k, $key, $params){
-                $this->data[$k][$key]=(isset($params['get']))? $node->$params['get']['fn']($params['get']['param']) : $node->text();
-            });
-        }else if(isset($params['multiple']) && $params['multiple']){
-            $this->crawler->filter($selector)->each(function($node) use($k, $key, $params){
-                $this->data[$k][$key][]=(isset($params['get']))? $node->$params['get']['fn']($params['get']['param']) : $node->text();
-            });
-        }else{
-            $this->crawler->filter($selector)->each(function($node) use($k, $key, $params){
-                $this->data[$k][$key]=(isset($params['get']))? $node->$params['get']['fn']($params['get']['param']) : $node->text();
-            });
-        }
-        if(isset($params['filter']) && is_callable($params['filter']) && !empty($this->data[$k][$key])){
-            $this->data[$k][$key]=$params['filter']($this->data[$k][$key]);
-        }*/
     }
 
     /**
