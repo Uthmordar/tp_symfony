@@ -32,11 +32,12 @@ class RegisterFromParserServices{
      */
     public function registerDatas($data){
         foreach($data as $d){
-            if(!empty($d['director']) && !empty($d['title']) && !empty($d['year']) && !empty($d['leechers'])
+            if(!empty($d['imdbId']) && !empty($d['director']) && !empty($d['title']) && !empty($d['year']) && !empty($d['leechers'])
             && !empty($d['magnet']) && !empty($d['quality']) && !empty($d['seeders']) && !in_array($d['qualityType'], ['cam', 'ts'])){
                 $this->registerData($d);
             }
         }
+        $this->manager->flush();
         return true;
     }
 
@@ -50,8 +51,8 @@ class RegisterFromParserServices{
         if($movie){
             $torrent=$this->registerTorrent($movie, $d);
         }
-        if($movie && $torrent){
-            $this->manager->flush();
+        if($movie && !$torrent){
+            $this->manager->remove($movie);
         }
     }
 
@@ -99,10 +100,17 @@ class RegisterFromParserServices{
 
         if(!empty($result)){
             $movie=$this->updateMovie($d, $result[0]);
+            return $this->validateEntity($movie);
         }else{
-            $movie=$this->generateNewMovie($d, $categories);
+            $movie=$this->generateNewMovie($d);
         }
 
+        if($this->validateEntity($movie)){
+            foreach($categories as $cat){
+                $movie->addCategory($cat);
+            }
+        }
+        
         return $this->validateEntity($movie);
     }
 
@@ -143,7 +151,7 @@ class RegisterFromParserServices{
      * @param type $categories
      * @return Movie
      */
-    public function generateNewMovie($data, $categories){
+    public function generateNewMovie($data){
         $movie=new Movie();
 
         $movie->setDirector($data['director'])
@@ -154,9 +162,6 @@ class RegisterFromParserServices{
             ->setYear($data['year']);
         if(!empty($data['image'])){
             $movie->setImage($data['image']);
-        }
-        foreach($categories as $cat){
-            $movie->addCategory($cat);
         }
 
         return $movie;
@@ -170,10 +175,7 @@ class RegisterFromParserServices{
     public function updateMovie($data, \AppBundle\Entity\Movie $movie){
         $movie->setRating($data['rating'])
             ->setRatingCount($data['votes']);
-        if(!empty($data['image'])){
-            $movie->setImage($data['image']);
-        }
-        
+
         return $movie;
     }
 
