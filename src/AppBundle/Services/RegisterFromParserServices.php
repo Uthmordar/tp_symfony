@@ -16,7 +16,6 @@ class RegisterFromParserServices{
 
     public function __construct($doctrine, $validator){
         $this->validator=$validator;
-
         $this->doctrine=$doctrine;
 
         $this->manager=$this->doctrine->getManager();
