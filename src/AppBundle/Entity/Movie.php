@@ -115,7 +115,6 @@ class Movie{
 
     /**
      * Get id
-     *
      * @return integer 
      */
     public function getId(){
@@ -124,7 +123,6 @@ class Movie{
 
     /**
      * Set title
-     *
      * @param string $title
      * @return Movie
      */
@@ -135,7 +133,6 @@ class Movie{
 
     /**
      * Get title
-     *
      * @return string 
      */
     public function getTitle(){
@@ -144,7 +141,6 @@ class Movie{
 
     /**
      * Set imdbId
-     *
      * @param integer $imdbId
      * @return Movie
      */
@@ -155,7 +151,6 @@ class Movie{
 
     /**
      * Get imdbId
-     *
      * @return integer 
      */
     public function getImdbId(){
@@ -164,7 +159,6 @@ class Movie{
 
     /**
      * Set year
-     *
      * @param string $year
      * @return Movie
      */
@@ -175,7 +169,6 @@ class Movie{
 
     /**
      * Get year
-     *
      * @return string 
      */
     public function getYear(){
@@ -184,7 +177,6 @@ class Movie{
 
     /**
      * Set director
-     *
      * @param string $director
      * @return Movie
      */
@@ -195,7 +187,6 @@ class Movie{
 
     /**
      * Get director
-     *
      * @return string 
      */
     public function getDirector(){
@@ -204,7 +195,6 @@ class Movie{
 
     /**
      * Set image
-     *
      * @param string $image
      * @return Movie
      */
@@ -215,7 +205,6 @@ class Movie{
 
     /**
      * Get image
-     *
      * @return string 
      */
     public function getImage(){
@@ -224,7 +213,6 @@ class Movie{
 
     /**
      * Set rating
-     *
      * @param float $rating
      * @return Movie
      */
@@ -235,7 +223,6 @@ class Movie{
 
     /**
      * Get rating
-     *
      * @return float 
      */
     public function getRating(){
@@ -244,7 +231,6 @@ class Movie{
 
     /**
      * Set ratingCount
-     *
      * @param integer $ratingCount
      * @return Movie
      */
@@ -255,7 +241,6 @@ class Movie{
 
     /**
      * Get ratingCount
-     *
      * @return integer 
      */
     public function getRatingCount(){
@@ -264,7 +249,6 @@ class Movie{
 
     /**
      * Set seen
-     *
      * @param boolean $seen
      * @return Movie
      */
@@ -275,7 +259,6 @@ class Movie{
 
     /**
      * Get seen
-     *
      * @return boolean 
      */
     public function getSeen(){
@@ -284,7 +267,6 @@ class Movie{
 
     /**
      * Set block
-     *
      * @param boolean $block
      * @return Movie
      */
@@ -295,7 +277,6 @@ class Movie{
 
     /**
      * Get block
-     *
      * @return boolean 
      */
     public function getBlock(){
@@ -304,7 +285,6 @@ class Movie{
     
     /**
      * Set dateCreated
-     *
      * @param \DateTime $dateCreated
      * @return Torrent
      */
@@ -315,7 +295,6 @@ class Movie{
 
     /**
      * Get dateCreated
-     *
      * @return \DateTime 
      */
     public function getDateCreated(){
@@ -330,7 +309,6 @@ class Movie{
 
     /**
      * Add torrents
-     *
      * @param \AppBundle\Entity\Torrent $torrents
      * @return Movie
      */
@@ -342,7 +320,6 @@ class Movie{
 
     /**
      * Remove torrents
-     *
      * @param \AppBundle\Entity\Torrent $torrents
      */
     public function removeTorrent(\AppBundle\Entity\Torrent $torrents){
@@ -351,7 +328,6 @@ class Movie{
 
     /**
      * Get torrents
-     *
      * @return \Doctrine\Common\Collections\Collection 
      */
     public function getTorrents(){
@@ -368,7 +344,6 @@ class Movie{
 
     /**
      * Add categories
-     *
      * @param \AppBundle\Entity\Category $categories
      * @return Movie
      */
@@ -381,7 +356,6 @@ class Movie{
 
     /**
      * Remove categories
-     *
      * @param \AppBundle\Entity\Category $categories
      */
     public function removeCategory(\AppBundle\Entity\Category $categories){
@@ -390,7 +364,6 @@ class Movie{
 
     /**
      * Get categories
-     *
      * @return \Doctrine\Common\Collections\Collection 
      */
     public function getCategories(){
