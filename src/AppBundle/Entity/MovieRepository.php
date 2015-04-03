@@ -1,5 +1,4 @@
 <?php
-
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
@@ -13,42 +12,40 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  */
 class MovieRepository extends EntityRepository{
     protected $nbMovieByPage=5;
-    
+
     /**
-     * 
      * @param type $imdb
      * @return type
      */
     public function findMovieByImdb($imdb){
         $qb=$this->createQueryBuilder("m");
-        
+
         $query=$qb->where('m.imdbId=:imdb')
             ->setParameter('imdb', $imdb)
             ->getQuery();
-        
+
         return $query->getResult();
     }
-    
+
     /**
-     * 
      * @param type $name
      * @param type $p
      * @return Paginator
      */
     public function findMoviesByCategory($name, $p){
         $query = $this->getEntityManager()
-        ->createQuery('
-            SELECT m FROM AppBundle:Movie m
-            LEFT JOIN m.categories c
-            WHERE c.name=:name'
-        )->setParameter('name', $name)
-        ->setMaxResults($this->nbMovieByPage)
-        ->setFirstResult($this->nbMovieByPage * ($p-1));
-        
+            ->createQuery('
+                SELECT m FROM AppBundle:Movie m
+                LEFT JOIN m.categories c
+                WHERE c.name=:name'
+            )->setParameter('name', $name)
+            ->setMaxResults($this->nbMovieByPage)
+            ->setFirstResult($this->nbMovieByPage * ($p-1));
+
         $paginator=new Paginator($query);
         return $paginator;
     }
-    
+
     public function getNbMovieByPage(){
         return $this->nbMovieByPage;
     }

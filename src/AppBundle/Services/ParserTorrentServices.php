@@ -8,7 +8,7 @@ class ParserTorrentServices{
     protected $client;
     protected $baseUrl='http://kickass.to/movies/?field=seeders&sorder=desc';
     protected $crawler;
-    
+
     /**
      * data provider selector for torrent page
      * @var type 
@@ -21,7 +21,7 @@ class ParserTorrentServices{
         ['div.dataList>ul>li span', 'quality', ['eq'=>1]],
         ['div.dataList>ul>li a', 'imdbId', ['eq'=>1]],
     ];
-    
+
     /**
      * data provider selector for imdb page
      * @var type 
@@ -33,7 +33,7 @@ class ParserTorrentServices{
         ['span[itemprop="ratingValue"]', 'rating', []],
         ['span[itemprop="genre"]', 'genre', ['multiple'=>1]]
     ];
-    
+
     public function __construct(){
         $this->client=new Client();
         $t=function($text){
@@ -41,7 +41,7 @@ class ParserTorrentServices{
         };
         $this->imdbProvider[]=['span[itemprop="ratingCount"]', 'votes', ['filter'=>$t]];
     }
-    
+
     /**
      * get data from url
      * @return type
@@ -61,7 +61,7 @@ class ParserTorrentServices{
         unset($torrent);
         return $this->data;
     }
-    
+
     /**
      * get html from $baseUrl && get ancre uri from page
      * @return type
@@ -76,7 +76,7 @@ class ParserTorrentServices{
             $this->data[]=['ancre'=>$ancre, 'uri'=>$link->link()->getUri(), 'qualityType'=>$qT, 'genre'=>[], 'votes'=>0, 'rating'=>0];
         });
     }
-    
+
     /**
      * get data from request page
      * @param type index $k
@@ -90,7 +90,7 @@ class ParserTorrentServices{
         }
         return $this;
     }
-        
+
     /**
      * shortCut for simple filter crawler request with eq facultative param
      * @param type $selector
@@ -117,7 +117,7 @@ class ParserTorrentServices{
             $this->data[$k][$key]=$params['filter']($this->data[$k][$key]);
         }
     }
-    
+
     /**
      * get magnet && set hash from it
      * @param type $k
@@ -128,7 +128,7 @@ class ParserTorrentServices{
             $this->data[$k]['hash']=(!empty($matches['hash']))? $matches['hash'] : '';
         }
     }
-          
+   
     /**
      * extract quality type from torrent name
      * @param type $name

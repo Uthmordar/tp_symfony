@@ -11,18 +11,15 @@ class TorrentController extends Controller{
      */
     public function indexAction($p){
         $pagination=$this->get('pagination_service');
-        
         $torrentRepo=$this->getDoctrine()->getRepository("AppBundle:Torrent");
 
         $torrents=$torrentRepo->findNoBlockNoSeenTorrent($p);
         
         $data=$pagination->getPaginationData($p, count($torrents), $torrentRepo->getNbTorrentHomeByPage());
         
-        
         $param=[
             'torrents'=>$torrents,
         ];
-        
         $params=array_merge($param, $data);
         
         return $this->render('torrent/index.torrent.html.twig', $params);

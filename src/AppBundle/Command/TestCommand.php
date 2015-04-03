@@ -13,7 +13,7 @@ class TestCommand extends ContainerAwareCommand{
     protected function execute(InputInterface $input, OutputInterface $output){
         $container=$this->getContainer();
         $parser=$container->get('parser_torrent_service');
-        
+
         $data=array_reverse($parser->getDataTorrent());
         $register=$container->get('register_from_parser');
         if($register->registerDatas($data)){

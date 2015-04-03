@@ -1,5 +1,4 @@
 <?php
-
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
@@ -13,11 +12,11 @@ use Doctrine\ORM\EntityRepository;
 class CategoryRepository extends EntityRepository{  
     public function findCategoryByName($name){
         $qb=$this->createQueryBuilder("t");
-        
+
         $query=$qb->where('t.name LIKE :name')
             ->setParameter('name', "%$name%")
             ->getQuery();
-        
+
         return $query->getResult();
     }
 }

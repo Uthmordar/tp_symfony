@@ -6,27 +6,26 @@ use AppBundle\Entity\Torrent;
 use AppBundle\Entity\Category;
 
 class RegisterFromParserServices{
-        
     protected $doctrine;
     protected $validator;
-    
+
     protected $manager;
     protected $movieRepo;
     protected $torrentRepo;
     protected $categoryRepo;
-    
+
     public function __construct($doctrine, $validator){
         $this->validator=$validator;
-        
+
         $this->doctrine=$doctrine;
-        
+
         $this->manager=$this->doctrine->getManager();
-        
+
         $this->movieRepo=$this->doctrine->getRepository('AppBundle:Movie');
         $this->torrentRepo=$this->doctrine->getRepository('AppBundle:Torrent');
         $this->categoryRepo=$this->doctrine->getRepository('AppBundle:Category');
     }
-    
+
     /**
      * get parser datas and register if fields are presents
      * @param type $data
@@ -41,7 +40,7 @@ class RegisterFromParserServices{
         }
         return true;
     }
-    
+
     /**
      * register dataset as movie // torrent
      * @param type $d
@@ -56,7 +55,7 @@ class RegisterFromParserServices{
             $this->manager->flush();
         }
     }
-    
+
     /**
      * register all categories in data table
      * @param type $cats
@@ -67,10 +66,10 @@ class RegisterFromParserServices{
         foreach($cats as $cat){
             $this->registerCategory($categories, $cat);
         }
-        
+
         return $categories;
     }
-    
+
     /**
      * register category for a movie if not exist else return existing category
      * @param type $categories
@@ -89,7 +88,7 @@ class RegisterFromParserServices{
             }
         }
     }
-    
+
     /**
      * register/update movie by imdbid
      * @param type $d
@@ -98,16 +97,16 @@ class RegisterFromParserServices{
      */
     public function registerMovie($d, $categories){
         $result=$this->movieRepo->findMovieByImdb($d['imdbId']);
-                
+
         if(!empty($result)){
             $movie=$this->updateMovie($d, $result[0]);
         }else{
             $movie=$this->generateNewMovie($d, $categories);
         }
-        
+
         return $this->validateEntity($movie);
     }
-    
+
     /**
      * register/update torrent by name
      * @param \AppBundle\Entity\Movie $movie
@@ -116,16 +115,16 @@ class RegisterFromParserServices{
      */
     public function registerTorrent(\AppBundle\Entity\Movie $movie, $d){
         $resultT=$this->torrentRepo->findTorrentByName($d['ancre']);
-                
+
         if(!empty($resultT)){
             $torrent=$this->updateTorrent($d, $resultT[0]);
         }else{
             $torrent=$this->generateNewTorrent($d, $movie);
         }
-        
+
         return $this->validateEntity($torrent);
     }
-    
+
     /**
      * validate an entity
      * @param type $entity
@@ -139,7 +138,7 @@ class RegisterFromParserServices{
             return false;
         }
     }
-    
+
     /**
      * @param type $data
      * @param type $categories
@@ -156,10 +155,10 @@ class RegisterFromParserServices{
             ->setTitle(trim(str_replace('"', "'", $data['title'])))
             ->setYear($data['year'])
             ->addCategory($categories);
-        
+
         return $movie;
     }
-    
+
     /**
      * @param type $data
      * @param Movie $movie
@@ -168,10 +167,10 @@ class RegisterFromParserServices{
     public function updateMovie($data, \AppBundle\Entity\Movie $movie){
         $movie->setRating($data['rating'])
             ->setRatingCount($data['votes']);
-        
+
         return $movie;
     }
-    
+
     /**
      * @param type $data
      * @param Movie $movie
@@ -188,10 +187,10 @@ class RegisterFromParserServices{
             ->setSeeders($data['seeders'])
             ->setQualityType($data['qualityType'])
             ->setMovie($movie);
-        
+
         return $torrent;
     }
-    
+
     /**
      * @param type $data
      * @param Torrent $torrent
@@ -200,7 +199,7 @@ class RegisterFromParserServices{
     public function updateTorrent($data, \AppBundle\Entity\Torrent $torrent){
         $torrent->setSeeders($data['seeders'])
             ->setLeetchers($data['leechers']);
-        
+
         return $torrent;
     }
 }
