@@ -20,7 +20,6 @@ class TestCommand extends ContainerAwareCommand{
         $register=$container->get('register_from_parser');
         
         $data=array_reverse($parser->getDataTorrent());
-        var_dump($data); die();
         if($register->registerDatas($data)){
             $output->writeln('<info>Torrents registered with success</info>');
         }else{

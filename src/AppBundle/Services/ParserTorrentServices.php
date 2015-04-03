@@ -69,7 +69,7 @@ class ParserTorrentServices{
     public function getTorrentList(){
         $this->crawler=$this->client->request('GET', $this->baseUrl);
 
-        $this->crawler->filter('div.torrentname>div.filmType>a.cellMainLink')->each(function($node){
+        $this->crawler->filter('div.torrentname>div.filmType>a.cellMainLink')->eq(0)->each(function($node){
             $ancre=$node->text();
             $link=$this->crawler->selectLink($ancre);
             $qT=$this->getQualityType($ancre);
@@ -96,7 +96,7 @@ class ParserTorrentServices{
      * @param type $selector
      * @param type $key
      * @param type $k
-     * @param type $params
+     * @param type $params ['get'=>['fn'=>'attr', 'param'=>'src'],  'multiple'=>true, 'filter'=>Closure]
      */
     public function getFilterCrawlerText($selector, $key, $k, $params=[]){
         $filter=$this->crawler->filter($selector);
@@ -135,6 +135,7 @@ class ParserTorrentServices{
     public function getQualityType($name){
         preg_match('/(?<BluRay> brrip | bluray)|(?<HD>hdrip|HDTC)|(?<cam> cam )|(?<ts> ts )|(?<XviD>xvid|dvdrip)/i', $name, $matches);
         if($matches){
+            var_dump($matches);
             foreach($matches as $q=>$match){
                 if(!is_int($q)){
                     return $q;
