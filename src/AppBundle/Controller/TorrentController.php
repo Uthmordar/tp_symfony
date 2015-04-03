@@ -4,8 +4,6 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use AppBundle\Entity\Torrent;
-use AppBundle\Entity\Movie;
 
 class TorrentController extends Controller{
     /**

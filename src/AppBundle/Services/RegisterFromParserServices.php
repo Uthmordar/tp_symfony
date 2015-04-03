@@ -34,9 +34,8 @@ class RegisterFromParserServices{
      */
     public function registerDatas($data){
         foreach($data as $d){
-            if(!empty($d['imdbId']) && !empty($d['director']) && !empty($d['rating']) && !empty($d['votes']) 
-                && !empty($d['title']) && !empty($d['year']) && !empty($d['hash']) && !empty($d['leechers'])
-                    && !empty($d['magnet']) && !empty($d['ancre']) && !empty($d['quality']) && !empty($d['seeders']) && $d['rating']>6 && !in_array($d['qualityType'], ['cam', 'ts'])){
+            if(!empty($d['imdbId']) && !empty($d['director']) && !empty($d['title']) && !empty($d['year']) && !empty($d['leechers'])
+            && !empty($d['magnet']) && !empty($d['quality']) && !empty($d['seeders']) && $d['rating']>6 && !in_array($d['qualityType'], ['cam', 'ts'])){
                 $this->registerData($d);
             }
         }

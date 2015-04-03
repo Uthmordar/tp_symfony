@@ -7,8 +7,13 @@
             <file>file:/C:/wamp2/www/symfony_torrent/src/AppBundle/Controller/CategoryController.php</file>
             <file>file:/C:/wamp2/www/symfony_torrent/src/AppBundle/Entity/CategoryRepository.php</file>
             <file>file:/C:/wamp2/www/symfony_torrent/src/AppBundle/Entity/MovieRepository.php</file>
-            <file>file:/C:/wamp2/www/symfony_torrent/src/AppBundle/Entity/TorrentRepository.php</file>
             <file>file:/C:/wamp2/www/symfony_torrent/src/AppBundle/Services/RegisterFromParserServices.php</file>
+            <file>file:/C:/wamp2/www/symfony_torrent/app/Resources/views/torrent/index.torrent.html.twig</file>
+            <file>file:/C:/wamp2/www/symfony_torrent/app/Resources/views/base.html.twig</file>
+            <file>file:/C:/wamp2/www/symfony_torrent/app/AppKernel.php</file>
+            <file>file:/C:/wamp2/www/symfony_torrent/src/AppBundle/Entity/TorrentRepository.php</file>
+            <file>file:/C:/wamp2/www/symfony_torrent/app/AppCache.php</file>
+            <file>file:/C:/wamp2/www/symfony_torrent/src/AppBundle/Controller/TorrentController.php</file>
             <file>file:/C:/wamp2/www/symfony_torrent/app/Resources/views/movie/show.movie.html.twig</file>
             <file>file:/C:/wamp2/www/symfony_torrent/src/AppBundle/Command/TestCommand.php</file>
             <file>file:/C:/wamp2/www/symfony_torrent/src/AppBundle/Services/ParserTorrentServices.php</file>

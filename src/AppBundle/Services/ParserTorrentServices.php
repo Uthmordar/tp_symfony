@@ -51,12 +51,14 @@ class ParserTorrentServices{
         foreach($this->data as $k=>$torrent){
             $this->setRequestPageData($k, $this->torrentPageProvider, $torrent['uri'])->setHash($k);
         }
-        foreach($this->data as $k=>$torrent){
+        foreach($this->data as $k=>&$torrent){
             if(empty($torrent['imdbId'])){
+                unset($this->data[$k]);
                 continue;
             }
             $this->setRequestPageData($k, $this->imdbProvider, 'http://www.imdb.com/title/tt'.$torrent['imdbId']);
         }
+        unset($torrent);
         return $this->data;
     }
     
@@ -71,7 +73,7 @@ class ParserTorrentServices{
             $ancre=$node->text();
             $link=$this->crawler->selectLink($node->text());
             $qT=$this->setQualityType($ancre);
-            $this->data[]=['ancre'=>$ancre, 'uri'=>$link->link()->getUri(), 'qualityType'=>$qT, 'genre'=>[]];
+            $this->data[]=['ancre'=>$ancre, 'uri'=>$link->link()->getUri(), 'qualityType'=>$qT, 'genre'=>[], 'votes'=>0, 'rating'=>0];
         });
     }
     
@@ -83,7 +85,6 @@ class ParserTorrentServices{
      */
     public function setRequestPageData($k, $provider, $request){
         $this->crawler=$this->client->request('GET', $request);
-
         foreach($provider as $pageParams){
             $this->getFilterCrawlerText($pageParams[0], $pageParams[1], $k, $pageParams[2]);
         }
@@ -112,7 +113,7 @@ class ParserTorrentServices{
                 $this->data[$k][$key]=(isset($params['get']))? $node->$params['get']['fn']($params['get']['param']) : $node->text();
             });
         }
-        if(isset($params['filter']) && is_callable($params['filter'])){
+        if(isset($params['filter']) && is_callable($params['filter']) && !empty($this->data[$k][$key])){
             $this->data[$k][$key]=$params['filter']($this->data[$k][$key]);
         }
     }
@@ -124,7 +125,7 @@ class ParserTorrentServices{
     public function setHash($k){
         if(!empty($this->data[$k]['magnet'])){
             preg_match('/btih:(?<hash>\w*)&/', $this->data[$k]['magnet'], $matches);
-            $this->data[$k]['hash']=$matches['hash'];
+            $this->data[$k]['hash']=(!empty($matches['hash']))? $matches['hash'] : '';
         }
     }
           
@@ -142,6 +143,6 @@ class ParserTorrentServices{
                 }
             }
         }
-        return 'Unknow';
+        return 'Unknown';
     }
 }
