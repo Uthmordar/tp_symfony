@@ -13,6 +13,7 @@ class RegisterFromParserServices{
     protected $movieRepo;
     protected $torrentRepo;
     protected $categoryRepo;
+    protected $error=[];
 
     public function __construct($doctrine, $validator){
         $this->validator=$validator;
@@ -38,7 +39,7 @@ class RegisterFromParserServices{
             }
         }
         $this->manager->flush();
-        return true;
+        return (!empty($this->error))? $this->error : true;
     }
 
     /**
