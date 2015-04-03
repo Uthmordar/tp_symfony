@@ -14,12 +14,12 @@ class ParserTorrentServices{
      * @var type 
      */
     protected $torrentPageProvider=[
-        ['a.magnetlinkButton', 'magnet', ['get'=>['fn'=>'attr', 'param'=>'href']]],
-        ['div.dataList>ul>li span', 'title', ['eq'=>0]],
-        ['div.seedBlock>strong', 'seeders', []],
-        ['div.leechBlock>strong', 'leechers', []],
-        ['div.dataList>ul>li span', 'quality', ['eq'=>1]],
-        ['div.dataList>ul>li a', 'imdbId', ['eq'=>1]],
+        'magnet'    =>['a.magnetlinkButton', ['get'=>['fn'=>'attr', 'param'=>'href']]],
+        'title'     =>['div.dataList>ul>li span', ['eq'=>0]],
+        'seeders'   =>['div.seedBlock>strong', []],
+        'leechers'  =>['div.leechBlock>strong', []],
+        'quality'   =>['div.dataList>ul>li span', ['eq'=>1]],
+        'imdbId'    =>['div.dataList>ul>li a', ['eq'=>1]],
     ];
 
     /**
@@ -27,11 +27,11 @@ class ParserTorrentServices{
      * @var type 
      */
     protected $imdbProvider=[
-        ['h1.header>span.nobr>a', 'year', []],
-        ['div[itemprop="director"] span[itemprop="name"]', 'director', []],
-        ['#img_primary img[itemprop="image"]', 'image', ['eq'=>0, 'get'=>['fn'=>'attr', 'param'=>'src']]],
-        ['span[itemprop="ratingValue"]', 'rating', []],
-        ['span[itemprop="genre"]', 'genre', ['multiple'=>1]]
+        'year'      =>['h1.header>span.nobr>a', []],
+        'director'  =>['div[itemprop="director"] span[itemprop="name"]', []],
+        'image'     =>['#img_primary img[itemprop="image"]', ['eq'=>0, 'get'=>['fn'=>'attr', 'param'=>'src']]],
+        'rating'    =>['span[itemprop="ratingValue"]', []],
+        'genre'     =>['span[itemprop="genre"]', ['multiple'=>1]]
     ];
 
     public function __construct(){
@@ -39,7 +39,7 @@ class ParserTorrentServices{
         $t=function($text){
             return str_replace(',', '', $text);
         };
-        $this->imdbProvider[]=['span[itemprop="ratingCount"]', 'votes', ['filter'=>$t]];
+        $this->imdbProvider['votes']=['span[itemprop="ratingCount"]', ['filter'=>$t]];
     }
 
     /**
@@ -69,7 +69,7 @@ class ParserTorrentServices{
     public function getTorrentList(){
         $this->crawler=$this->client->request('GET', $this->baseUrl);
 
-        $this->crawler->filter('div.torrentname>div.filmType>a.cellMainLink')->eq(0)->each(function($node){
+        $this->crawler->filter('div.torrentname>div.filmType>a.cellMainLink')->each(function($node){
             $ancre=$node->text();
             $link=$this->crawler->selectLink($ancre);
             $qT=$this->getQualityType($ancre);
@@ -85,8 +85,8 @@ class ParserTorrentServices{
      */
     public function setRequestPageData($k, $provider, $request){
         $this->crawler=$this->client->request('GET', $request);
-        foreach($provider as $pageParams){
-            $this->getFilterCrawlerText($pageParams[0], $pageParams[1], $k, $pageParams[2]);
+        foreach($provider as $key=>$pageParams){
+            $this->getFilterCrawlerText($pageParams[0], $key, $k, $pageParams[1]);
         }
         return $this;
     }
